@@ -8,7 +8,6 @@ import java.awt.event.*;
 @SuppressWarnings("serial")
 public class WebBrowser extends JFrame {
 
-	//	TODO: make the error popup work for the login confirmation
 	private JMenuItem backMenuItem;
 	private JMenuItem forwardMenuItem;
 	private JMenuItem addMenuItem;

@@ -2,7 +2,6 @@ package front_end.client;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import front_end.client.gui_searcher.views.might_not_use.BaseFrame;
 import shared.communication.params.*;
 import shared.communication.results.*;
 
@@ -20,15 +19,17 @@ import java.net.URL;
 
 public class ClientCommunicator {
 
-	private BaseFrame view;
+	private String host;
+	private String port;
 
-	public ClientCommunicator(BaseFrame view) {
-		this.view = view;
+	public ClientCommunicator(String host, String port) {
+		this.host = host;
+		this.port = port;
 	}
 
 	private String getUrlPrefix() {
-		String serverHost = view.getHost();
-		String serverPort = view.getPort();
+		String serverHost = host;
+		String serverPort = port;
 		return "http://" + serverHost + ":" + serverPort;
 
 	}
@@ -127,6 +128,14 @@ public class ClientCommunicator {
 			return null;
 		}
 		return returnObject;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public String getPort() {
+		return port;
 	}
 }
 

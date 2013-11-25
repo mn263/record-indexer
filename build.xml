@@ -115,7 +115,7 @@
     </target>
 
     <target name="back_end.server-gui" depends="compile" description="run the back_end.server test gui">
-        <java classname="front_end.client.gui_searcher.RecordIndexerGUI" fork="yes">
+        <java classname="front_end.client.gui.RecordIndexerGUI" fork="yes">
             <classpath>
                 <path refid="all-classpath"/>
             </classpath>

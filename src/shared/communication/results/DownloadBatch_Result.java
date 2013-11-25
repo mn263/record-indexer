@@ -91,6 +91,10 @@ public class DownloadBatch_Result {
 		return fieldInformationList;
 	}
 
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
 	public class FieldInformation {
 		private int fieldId;
 		private int fieldNumber;

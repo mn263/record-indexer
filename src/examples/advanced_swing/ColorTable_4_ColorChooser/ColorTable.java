@@ -193,7 +193,7 @@ class ColorCellEditor extends AbstractCellEditor implements TableCellEditor {
 		colorMap.put("Red", Color.RED);
 		colorMap.put("White", Color.WHITE);
 
-		comboBox = new JComboBox<String>();
+		comboBox = new JComboBox<>();
 		comboBox.setEditable(true);
 		comboBox.addActionListener(actionListener);
 		for (String colorName : colorMap.keySet()) {
