@@ -1,7 +1,9 @@
-package front_end.client.gui.gui_panels.indexer_view.bottom_left;
+package front_end.client.gui.gui_panels.indexer_view.bottom_right;
 
 import front_end.client.gui.BasePanel;
 import front_end.client.gui.controllers.ClientController;
+import front_end.client.gui.gui_panels.indexer_view.bottom_left.FormEntry;
+import front_end.client.gui.gui_panels.indexer_view.bottom_left.TableEntry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,19 +13,18 @@ import java.awt.*;
  * Date: 11/22/13
  * Time: 7:53 PM
  */
-public class BottomLeftPanel extends BasePanel {
+public class BottomRightPanel extends BasePanel {
 
-	public BottomLeftPanel(ClientController clientController) {
+	public BottomRightPanel(ClientController clientController) {
 		super(clientController);
 
 		setLayout(new BorderLayout());
-//		setPreferredSize(new Dimension(400, 200));
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		TableEntry tableEntry = new TableEntry(clientController);
 		FormEntry formEntry = new FormEntry(clientController);
-		tabbedPane.addTab("Table Entry", tableEntry);
-		tabbedPane.addTab("Form Entry", formEntry);
+		tabbedPane.addTab("File Help", tableEntry);
+		tabbedPane.addTab("Image Navigation", formEntry);
 		add(tabbedPane, BorderLayout.CENTER);
 	}
 }

@@ -1,8 +1,8 @@
 package front_end.client.gui.might_not_use;
 
 import front_end.client.gui.controllers.BaseController;
-import front_end.client.gui.gui_panels.indexer_view.ImagePanel;
-import front_end.client.gui.gui_panels.indexer_view.ImagesPanel;
+import front_end.client.gui.gui_panels.indexer_view.image_section.ImagePanel;
+import front_end.client.gui.gui_panels.indexer_view.image_section.ImagesPanel;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -73,7 +73,6 @@ public class GuiSearchFrame {
 //		addWindowListener(new WindowAdapter() {
 //			@Override
 //			public void windowClosed(WindowEvent arg0) {
-//				// TODO Auto-generated method stub
 //			}
 //		});
 //

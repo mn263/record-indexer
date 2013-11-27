@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class WebBrowser extends JFrame {
-//	TODO: the File-->Exit could be very useful
 
 	private JMenuItem backMenuItem;
 	private JMenuItem forwardMenuItem;

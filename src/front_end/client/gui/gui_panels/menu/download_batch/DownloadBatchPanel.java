@@ -1,4 +1,4 @@
-package front_end.client.gui.gui_panels.download_batch;
+package front_end.client.gui.gui_panels.menu.download_batch;
 
 import shared.communication.results.GetProjects_Result;
 
@@ -63,5 +63,9 @@ public class DownloadBatchPanel extends JPanel {
 
 	public JButton getDownloadButton() {
 		return downloadButton;
+	}
+
+	public JComboBox<String> getComboBox() {
+		return comboBox;
 	}
 }

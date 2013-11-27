@@ -15,7 +15,6 @@ public class LoginController extends BaseController {
 
 	private LoginFrame loginFrame;
 
-
 	public LoginController(ClientController clientController, LoginListener loginListener) {
 		super(clientController);
 		openLoginFrame(loginListener);
@@ -32,7 +31,6 @@ public class LoginController extends BaseController {
 			JOptionPane.showMessageDialog(loginFrame.getContentPane(), "Invalid Credentials", "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} else {
-//			TODO: get batchState for the person and set it in the clientController
 			String title = "Welcome to Indexer";
 			String loginMessage = getLoginMessage(result);
 			JOptionPane.showMessageDialog(loginFrame.getContentPane(), loginMessage, title, JOptionPane.INFORMATION_MESSAGE);

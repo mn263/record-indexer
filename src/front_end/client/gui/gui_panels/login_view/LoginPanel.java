@@ -34,9 +34,12 @@ public class LoginPanel extends JPanel {
 
 		// create buttons
 		JLabel userNameLabel = new JLabel("Username:");
-		userNameTextField = new JTextField(35);
+//		TODO: take out the 'test1' from being preloaded
+		userNameTextField = new JTextField("test1");
+//		userNameTextField = new JTextField(35);
 		JLabel passwordLabel = new JLabel("Password:");
-		passwordTextField = new JPasswordField(35);
+		passwordTextField = new JPasswordField("test1");
+//		passwordTextField = new JPasswordField(35);
 		loginButton = new JButton("Login");
 		exitButton = new JButton("Exit");
 

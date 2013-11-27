@@ -52,7 +52,6 @@ public class WebBrowser extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-//		TODO: use this Commands menu later in the project
 		JMenu menu = new JMenu("Commands");
 		menu.setMnemonic('c');
 		menuBar.add(menu);

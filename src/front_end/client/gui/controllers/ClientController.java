@@ -1,7 +1,9 @@
 package front_end.client.gui.controllers;
 
 import front_end.client.ClientCommunicator;
-import front_end.client.gui.BatchState;
+import front_end.client.gui.batch_state.BatchState;
+import front_end.client.gui.batch_state.BatchStateReader;
+import front_end.client.gui.batch_state.BatchStateWriter;
 import shared.communication.params.*;
 import shared.communication.results.*;
 
@@ -20,6 +22,15 @@ public class ClientController {
 		batchState = new BatchState();
 	}
 
+	public void saveBatchState() {
+		BatchStateWriter batchStateWriter = new BatchStateWriter(batchState);
+		batchStateWriter.writeBatchState();
+	}
+
+	public void readBatchState() {
+		BatchStateReader batchStateReader = new BatchStateReader(batchState);
+		batchStateReader.readBatchState();
+	}
 
 	public ValidateUser_Result validateUser(String userName, String password) {
 		ValidateUser_Result result = clientCommunicator.validateUser(new ValidateUser_Params(userName, password));
@@ -55,13 +66,11 @@ public class ClientController {
 //		}
 	}
 
-	private String getSampleImage(String userName, String password, String projectId) {
-		if (projectId.matches(isNumberRegex)) {
-			GetSampleImage_Result result = clientCommunicator.getSampleImage(new GetSampleImage_Params(userName, password, Integer.parseInt(projectId)));
-			return getHostAndPort() + result.getImageURL();
-		} else {
-			return null;
-		}
+	public String getSampleImage(int projectId) {
+		String userName = getBatchState().getUserName();
+		String password = getBatchState().getPassword();
+		GetSampleImage_Result result = clientCommunicator.getSampleImage(new GetSampleImage_Params(userName, password, projectId));
+		return getHostAndPort() + result.getImageURL();
 	}
 
 

@@ -1,4 +1,4 @@
-package front_end.client.gui;
+package front_end.client.gui.batch_state;
 
 import java.awt.*;
 

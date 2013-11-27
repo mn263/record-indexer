@@ -6,6 +6,9 @@ import front_end.client.gui.gui_panels.login_view.LoginController;
 import front_end.client.gui.gui_panels.login_view.LoginListener;
 import shared.communication.results.ValidateUser_Result;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  * User: matt
  * Date: 11/19/13
@@ -15,6 +18,7 @@ public class RecordIndexerInitializer {
 
 	private ClientController clientController;
 	private LoginController loginController;
+	private IndexerController indexerController;
 
 	public RecordIndexerInitializer(ClientController clientController) {
 		this.clientController = clientController;
@@ -25,7 +29,7 @@ public class RecordIndexerInitializer {
 	}
 
 	private void openRecordIndexerProgram() {
-		new IndexerController(clientController);
+		indexerController = new IndexerController(clientController, restartListener);
 	}
 
 	private LoginListener loginListener = new LoginListener() {
@@ -33,9 +37,19 @@ public class RecordIndexerInitializer {
 		public void loggedIn(ValidateUser_Result loginResult) {
 			boolean isLoggedIn = loginController.isLoggedInHandler(loginResult);
 			if (isLoggedIn) {
-//				TODO: check for batchState for person (if exists change batchState to match it
+				clientController.readBatchState();
 				openRecordIndexerProgram();
 			}
+		}
+	};
+
+	ActionListener restartListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//				TODO: on logout do the following
+			clientController.saveBatchState();
+			indexerController.dispose();
+			startIndexer();
 		}
 	};
 }

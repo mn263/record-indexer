@@ -1,5 +1,8 @@
-package front_end.client.gui.gui_panels.indexer_view;
+package front_end.client.gui.gui_panels.indexer_view.image_section;
 
+
+import front_end.client.gui.BasePanel;
+import front_end.client.gui.controllers.ClientController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,7 +16,7 @@ import java.net.URL;
  * Date: 11/14/13
  * Time: 10:58 PM
  */
-public class ImagePanel {
+public class ImagePanel extends BasePanel {
 
 //	If no one is logged in, or no batch is currently being indexed by the logged in user, the Image Panel should be empty.
 //	The Image Panel should highlight the currently-selected record field (if highlights are turned on).
@@ -26,9 +29,14 @@ public class ImagePanel {
 
 	private JLabel imageLabel;
 
-	public ImagePanel() {
+	public ImagePanel(ClientController clientController) {
+		super(clientController);
+
+
 		imageLabel = new JLabel();
-		imageLabel.setSize(new Dimension(800, 600));
+//		imageLabel.setSize(600, 600);
+//		setSize(new Dimension(600, 300));
+		setBackground(Color.GRAY);
 //		add(imageLabel);
 	}
 

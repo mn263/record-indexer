@@ -1,4 +1,4 @@
-package front_end.client.gui.gui_panels.indexer_view;
+package front_end.client.gui;
 
 import front_end.client.gui.controllers.ClientController;
 

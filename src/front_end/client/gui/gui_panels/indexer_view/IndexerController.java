@@ -1,7 +1,8 @@
 package front_end.client.gui.gui_panels.indexer_view;
 
-import front_end.client.gui.BatchState;
 import front_end.client.gui.controllers.ClientController;
+
+import java.awt.event.ActionListener;
 
 /**
  * User: matt
@@ -11,19 +12,19 @@ import front_end.client.gui.controllers.ClientController;
 public class IndexerController {
 
 	private ClientController clientController;
+	private IndexerFrame mainDisplayFrame;
 
-	public IndexerController(ClientController clientController) {
+	public IndexerController(ClientController clientController, ActionListener restartListener) {
 		this.clientController = clientController;
-		BatchState batchState = clientController.getBatchState();
-		openMainFrame();
+		openMainFrame(restartListener);
 	}
 
-	private void openMainFrame() {
-		IndexerFrame mainDisplayFrame = new IndexerFrame(clientController);
+	private void openMainFrame(ActionListener restartListener) {
+		mainDisplayFrame = new IndexerFrame(clientController, restartListener);
 		mainDisplayFrame.setVisible(true);
 	}
 
-//	TODO: Keep the listeners here so that they can interact with each other
-//	public boolean isLoggedInHandler(ValidateUser_Result loginResult) {
-//	}
+	public void dispose() {
+		mainDisplayFrame.dispose();
+	}
 }

@@ -1,11 +1,14 @@
 package front_end.client.gui.gui_panels.indexer_view.bottom_left;
 
+import front_end.client.gui.BasePanel;
+import front_end.client.gui.controllers.ClientController;
+
 /**
  * User: matt
  * Date: 11/19/13
  * Time: 8:35 PM
  */
-public class table_entry {
+public class TableEntry extends BasePanel {
 //	If no one is logged in, or no batch is currently being indexed by the logged in user, the Table Entry Tab should be empty.
 //	When a batch is being indexed, the table should contain a “Record Number”column that displays record numbers and is
 //	read-only. The table should also contain editable columns for all of the project fields in the proper order.
@@ -15,4 +18,9 @@ public class table_entry {
 //	Unrecognized field values should be highlighted red.
 //			Right-clicking on an unrecognized field value (i.e., one that is highlighted red) should bring up a context
 //	menu containing a “See Suggestions”menu item. Selecting the “See Suggestions”menu item should display the Suggestions Dialog. If the user selects a suggested value and clicks the “Use Suggestion”button, the selected value should replace the unrecognized value in the table.
+
+
+	public TableEntry(ClientController clientController) {
+		super(clientController);
+	}
 }

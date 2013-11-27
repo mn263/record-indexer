@@ -1,7 +1,8 @@
-package front_end.client.gui.gui_panels.indexer_view;
+package front_end.client.gui.gui_panels.indexer_view.menu_bar;
+
+import front_end.client.gui.controllers.ClientController;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 /**
@@ -15,21 +16,20 @@ public class FileMenu extends JMenu {
 	private JMenuItem logoutMenu;
 	private JMenuItem exitMenu;
 
-	public FileMenu(ActionListener menuListener) {
+	public FileMenu(ClientController clientController) {
 		super("File");
 		setMnemonic('f');
 
-//		TODO: only allow "Download Batch" if they aren't currently working on a batch
 		dnldBatchMenu = new JMenuItem("Download Batch", KeyEvent.VK_D);
-		dnldBatchMenu.addActionListener(menuListener);
+		if (clientController.getBatchState().getImageURL() != null) {
+			dnldBatchMenu.setEnabled(false);
+		}
 		add(dnldBatchMenu);
 
 		logoutMenu = new JMenuItem("Logout", KeyEvent.VK_L);
-		logoutMenu.addActionListener(menuListener);
 		add(logoutMenu);
 
 		exitMenu = new JMenuItem("Exit", KeyEvent.VK_X);
-		exitMenu.addActionListener(menuListener);
 		add(exitMenu);
 	}
 

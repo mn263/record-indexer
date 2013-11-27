@@ -23,6 +23,9 @@ public class LoginFrame extends BaseFrame {
 	public LoginFrame(ClientController clientController) {
 		super(clientController);
 
+		setLocation(clientController.getBatchState().getWindowPosition());
+		setResizable(false);
+
 		getContentPane().setSize(LOGIN_WIDTH, LOGIN_HEIGHT);
 		setPreferredSize(new Dimension(LOGIN_WIDTH, LOGIN_HEIGHT));
 
@@ -51,7 +54,6 @@ public class LoginFrame extends BaseFrame {
 		});
 
 		pack();
-		setMinimumSize(getPreferredSize());
 	}
 
 	public void addLoginListener(LoginListener loginListener) {
@@ -60,9 +62,5 @@ public class LoginFrame extends BaseFrame {
 
 	public String getUserName() {
 		return loginPanel.getUserName();
-	}
-
-	public String getUserPassword() {
-		return loginPanel.getPassword();
 	}
 }

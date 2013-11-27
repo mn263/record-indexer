@@ -1,4 +1,4 @@
-package front_end.client.gui;
+package front_end.client.gui.batch_state;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 10:15 AM
  */
 public class BatchState {
-	//	TODO: write a class that will write an xmlfile to save a user's status
+
 	private enum Zoom {
 		X_ONE, X_TWO, X_THREE, X_FOUR, X_FIVE, X_SIX
 	}
@@ -21,7 +21,8 @@ public class BatchState {
 	private List<String> recordValues;
 	private Point windowPosition;
 	private Point windowDimensions;
-	private Point dividerPositions;
+	private int horizDivPosit;
+	private int vertDivPosit;
 	private Zoom zoomLevel;
 	private double scrollPosition;
 	private boolean isHighlighted;
@@ -33,26 +34,28 @@ public class BatchState {
 		this.imageURL = null;
 		this.recordValues = new ArrayList<>();
 		this.windowPosition = new Point(100, 100);
-		this.windowDimensions = new Point(1000, 800);
-		this.dividerPositions = new Point(500, 400);
+		this.windowDimensions = new Point(1000, 650);
+		this.horizDivPosit = 442;
+		this.vertDivPosit = 328;
 		this.zoomLevel = Zoom.X_ONE;
 		this.scrollPosition = 0.0;
 		this.isHighlighted = true;
 		this.isInverted = false;
 	}
 
-	public BatchState(String imageURL, List<String> recordValues, Point windowPosition, Point windowDimensions,
-					  Point dividerPositions, Zoom zoomLevel, double scrollPosition, boolean isHighlighted, boolean isInverted) {
-		this.imageURL = imageURL;
-		this.recordValues = recordValues;
-		this.windowPosition = windowPosition;
-		this.windowDimensions = windowDimensions;
-		this.dividerPositions = dividerPositions;
-		this.zoomLevel = zoomLevel;
-		this.scrollPosition = scrollPosition;
-		this.isHighlighted = isHighlighted;
-		this.isInverted = isInverted;
-	}
+//	public BatchState(String imageURL, List<String> recordValues, Point windowPosition, Point windowDimensions,
+//					  int horizDivPosit, int vertDivPosit, Zoom zoomLevel, double scrollPosition, boolean isHighlighted, boolean isInverted) {
+//		this.imageURL = imageURL;
+//		this.recordValues = recordValues;
+//		this.windowPosition = windowPosition;
+//		this.windowDimensions = windowDimensions;
+//		this.horizDivPosit = horizDivPosit;
+//		this.vertDivPosit = vertDivPosit;
+//		this.zoomLevel = zoomLevel;
+//		this.scrollPosition = scrollPosition;
+//		this.isHighlighted = isHighlighted;
+//		this.isInverted = isInverted;
+//	}
 
 	public void addBSListener(BatchStateListener bsListener) {
 		this.batchStateListeners.add(bsListener);
@@ -106,12 +109,20 @@ public class BatchState {
 		this.windowDimensions = windowDimensions;
 	}
 
-	public Point getDividerPositions() {
-		return dividerPositions;
+	public int getHorizDivPosit() {
+		return horizDivPosit;
 	}
 
-	public void setDividerPositions(Point dividerPositions) {
-		this.dividerPositions = dividerPositions;
+	public void setHorizDivPosit(int horizDivPosit) {
+		this.horizDivPosit = horizDivPosit;
+	}
+
+	public int getVertDivPosit() {
+		return vertDivPosit;
+	}
+
+	public void setVertDivPosit(int vertDivPosit) {
+		this.vertDivPosit = vertDivPosit;
 	}
 
 	public Zoom getZoomLevel() {
