@@ -1,0 +1,19 @@
+<front__end.client.gui.batch__state.BatchState>
+    <userName>test1</userName>
+    <password>test1</password>
+    <recordValues/>
+    <windowPosition>
+        <x>100</x>
+        <y>100</y>
+    </windowPosition>
+    <windowDimensions>
+        <x>1000</x>
+        <y>650</y>
+    </windowDimensions>
+    <horizDivPosit>500</horizDivPosit>
+    <vertDivPosit>500</vertDivPosit>
+    <zoomLevel>X_ONE</zoomLevel>
+    <scrollPosition>0.0</scrollPosition>
+    <isHighlighted>true</isHighlighted>
+    <isInverted>false</isInverted>
+</front__end.client.gui.batch__state.BatchState>
