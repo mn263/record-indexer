@@ -1,7 +1,7 @@
 package front_end.client.gui.gui_panels.indexer_view.bottom_left;
 
-import front_end.client.gui.BasePanel;
-import front_end.client.gui.controllers.ClientController;
+import front_end.client.gui.ClientController;
+import front_end.client.gui.base_classes.BasePanel;
 
 /**
  * User: matt

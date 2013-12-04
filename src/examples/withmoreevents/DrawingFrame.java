@@ -1,5 +1,7 @@
 package examples.withmoreevents;
 
+import front_end.client.gui.gui_panels.indexer_view.image_section.DrawingComponent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -20,7 +22,7 @@ public class DrawingFrame extends JFrame {
 		this.addWindowFocusListener(windowAdapter);
 		this.addWindowStateListener(windowAdapter);
 
-		component = new DrawingComponent();
+//		component = new DrawingComponent();
 		this.add(component, BorderLayout.CENTER);
 
 		this.setLocation(100, 100);

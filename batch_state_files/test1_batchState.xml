@@ -1,19 +1,22 @@
 <front__end.client.gui.batch__state.BatchState>
     <userName>test1</userName>
     <password>test1</password>
+    <currentProject>-1</currentProject>
     <recordValues/>
     <windowPosition>
-        <x>100</x>
-        <y>100</y>
+        <x>388</x>
+        <y>873</y>
     </windowPosition>
     <windowDimensions>
-        <x>1000</x>
-        <y>650</y>
+        <x>992</x>
+        <y>649</y>
     </windowDimensions>
-    <horizDivPosit>500</horizDivPosit>
-    <vertDivPosit>500</vertDivPosit>
-    <zoomLevel>X_ONE</zoomLevel>
+    <horizDivPosit>442</horizDivPosit>
+    <vertDivPosit>496</vertDivPosit>
+    <zoomLevel>QUARTER</zoomLevel>
     <scrollPosition>0.0</scrollPosition>
     <isHighlighted>true</isHighlighted>
     <isInverted>false</isInverted>
+    <isTableEntryTab>true</isTableEntryTab>
+    <isFileHelpTab>true</isFileHelpTab>
 </front__end.client.gui.batch__state.BatchState>

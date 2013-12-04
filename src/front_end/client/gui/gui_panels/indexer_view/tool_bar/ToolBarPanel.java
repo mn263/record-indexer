@@ -1,7 +1,8 @@
 package front_end.client.gui.gui_panels.indexer_view.tool_bar;
 
-import front_end.client.gui.BasePanel;
-import front_end.client.gui.controllers.ClientController;
+import front_end.client.gui.ClientController;
+import front_end.client.gui.base_classes.BasePanel;
+import front_end.client.gui.batch_state.BatchState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,14 +51,14 @@ public class ToolBarPanel extends BasePanel {
 		zoomInButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: implement zoom-in
+				changeZoomIn();
 			}
 		});
 
 		zoomOutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: implement zoom-out
+				changeZoomOut();
 			}
 		});
 
@@ -83,6 +84,72 @@ public class ToolBarPanel extends BasePanel {
 				//TODO: implment submit batch
 			}
 		});
+	}
+
+	private void changeZoomIn() {
+		BatchState.Zoom zoom = getClientController().getBatchState().getZoomLevel();
+		switch (zoom) {
+			case QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.HALF);
+				break;
+			case HALF:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.THREE_QUARTER);
+				break;
+			case THREE_QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE);
+				break;
+			case ONE:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE_AND_QUARTER);
+				break;
+			case ONE_AND_QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE_AND_HALF);
+				break;
+			case ONE_AND_HALF:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE_AND_THREE_QUARTER);
+				break;
+			case ONE_AND_THREE_QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.TWO);
+				break;
+			case TWO:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.TWO);
+				break;
+			default:
+				System.out.println("The zoom level was an invalid one");
+				break;
+		}
+	}
+
+	private void changeZoomOut() {
+		BatchState.Zoom zoom = getClientController().getBatchState().getZoomLevel();
+		switch (zoom) {
+			case QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.QUARTER);
+				break;
+			case HALF:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.QUARTER);
+				break;
+			case THREE_QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.HALF);
+				break;
+			case ONE:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.THREE_QUARTER);
+				break;
+			case ONE_AND_QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE);
+				break;
+			case ONE_AND_HALF:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE_AND_QUARTER);
+				break;
+			case ONE_AND_THREE_QUARTER:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE_AND_HALF);
+				break;
+			case TWO:
+				getClientController().getBatchState().setZoomLevel(BatchState.Zoom.ONE_AND_THREE_QUARTER);
+				break;
+			default:
+				System.out.println("The zoom level was an invalid one");
+				break;
+		}
 	}
 
 	ActionListener saveButtonListener = new ActionListener() {

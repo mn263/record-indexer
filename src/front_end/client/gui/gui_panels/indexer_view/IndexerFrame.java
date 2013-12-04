@@ -1,14 +1,14 @@
 package front_end.client.gui.gui_panels.indexer_view;
 
+import front_end.client.gui.ClientController;
+import front_end.client.gui.base_classes.BaseFrame;
 import front_end.client.gui.batch_state.BatchState;
-import front_end.client.gui.controllers.ClientController;
 import front_end.client.gui.gui_panels.indexer_view.bottom_left.BottomLeftPanel;
 import front_end.client.gui.gui_panels.indexer_view.bottom_right.BottomRightPanel;
 import front_end.client.gui.gui_panels.indexer_view.image_section.ImagePanel;
 import front_end.client.gui.gui_panels.indexer_view.menu_bar.FileMenu;
 import front_end.client.gui.gui_panels.indexer_view.tool_bar.ToolBarPanel;
 import front_end.client.gui.gui_panels.menu.download_batch.DownloadBatchController;
-import front_end.client.gui.might_not_use.BaseFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,15 +25,12 @@ import java.beans.PropertyChangeListener;
  * Time: 8:33 PM
  */
 public class IndexerFrame extends BaseFrame {
-//	The main Indexing Window should be resizable, but the dialog windows should not be.
-//	TODO: make sure that all dialog windows are not resizable
-//	All dialog windows should be modal (i.e., the user must close the dialog window before being allowed to interact
-//	with other parts of the GUI).
 
 	private JMenuItem dnldBatchMenu;
 	private JMenuItem exitMenu;
 	private JSplitPane splitHorizontalPane;
 	private JSplitPane splitVerticalPane;
+	private ImagePanel imagePanel;
 
 	public IndexerFrame(ClientController clientController, ActionListener restartListener) {
 		super(clientController);
@@ -55,13 +52,12 @@ public class IndexerFrame extends BaseFrame {
 		FileMenu fileMenu = addDropDownMenu(restartListener);
 		menuBar.add(fileMenu);
 
-
 		//add menu(tool)-bar
 		ToolBarPanel toolBarPanel = new ToolBarPanel(clientController);
 		add(toolBarPanel, BorderLayout.NORTH);
 
 		//add imagePanel
-		ImagePanel imagePanel = new ImagePanel(clientController);
+		imagePanel = new ImagePanel(clientController);
 
 		//add bottom left and bottom right frames
 		addHorizontalDivider();
@@ -111,7 +107,6 @@ public class IndexerFrame extends BaseFrame {
 	PropertyChangeListener horizontalSplitListener = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
-			System.out.println("splitHorizontalPane--> " + splitHorizontalPane.getDividerLocation());
 			getClientController().getBatchState().setHorizDivPosit(splitHorizontalPane.getDividerLocation());
 		}
 	};
@@ -119,7 +114,6 @@ public class IndexerFrame extends BaseFrame {
 	PropertyChangeListener verticalSplitListener = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
-			System.out.println("splitVerticalPane--> " + splitVerticalPane.getDividerLocation());
 			getClientController().getBatchState().setVertDivPosit(splitVerticalPane.getDividerLocation());
 		}
 	};
@@ -127,24 +121,30 @@ public class IndexerFrame extends BaseFrame {
 	ComponentListener windowLocationListener = new ComponentListener() {
 		@Override
 		public void componentResized(ComponentEvent e) {
-			System.out.println("windowSize--> (" + getWidth() + "," + getHeight() + ")");
 			getClientController().getBatchState().setWindowDimensions(new Point(getWidth(), getHeight()));
 		}
 
 		@Override
 		public void componentMoved(ComponentEvent e) {
-			System.out.println("windowLocation--> (" + getLocation().toString() + ")");
 			getClientController().getBatchState().setWindowPosition(getLocation());
 		}
 
-		@Override
 		public void componentShown(ComponentEvent e) {
-			System.out.println("componentShown????");
 		}
 
-		@Override
 		public void componentHidden(ComponentEvent e) {
-			System.out.println("componentHidden????");
 		}
 	};
+
+	public void updateImage() {
+		imagePanel.updateImage();
+		//TODO: update the image in the bottom-left panel
+		//TODO: update the image in the bottom-right panel
+	}
+
+	public void updateZoom() {
+		imagePanel.updateZoom();
+		//TODO: update the image in the bottom-left panel
+		//TODO: update the image in the bottom-right panel
+	}
 }

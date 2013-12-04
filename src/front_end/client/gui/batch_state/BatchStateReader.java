@@ -30,6 +30,11 @@ public class BatchStateReader {
 		try {
 
 			File file = new File("batch_state_files/" + userName + "_batchState.xml");
+			if (!file.exists()) {
+//				TODO: figure out what to do here
+				return;
+//				file.createNewFile();
+			}
 			FileReader fileReader = new FileReader(file);
 			br = new BufferedReader(fileReader);
 

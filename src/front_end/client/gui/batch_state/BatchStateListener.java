@@ -14,23 +14,9 @@ public interface BatchStateListener {
 //		BS.addListener(this)
 //	}
 
-	void ImageURLChanged(String newURL);
+	void ImageURLChanged();
 
-	void RecordValueChanged(String recordValue);
+	void RecordSelectionChanged(Point selectedCell);
 
-	void WindowPositionChanged(Point newPosition);
-
-	void WindowDimensionsChanged(Point newDimensions);
-
-	void DividerPositionsChanged(Point newPositions);
-
-	void ZoomedIn();
-
-	void ZoomedOut();
-
-	void ScrollPositionChanged(double newPosition);
-
-	void HighlightIsToggled();
-
-	void InvertIsToggled();
+	void ZoomedChanged();
 }

@@ -1,4 +1,4 @@
-package front_end.client.gui.controllers;
+package front_end.client.gui;
 
 import front_end.client.ClientCommunicator;
 import front_end.client.gui.batch_state.BatchState;

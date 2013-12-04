@@ -11,51 +11,26 @@ import java.util.List;
  */
 public class BatchState {
 
-	private enum Zoom {
-		X_ONE, X_TWO, X_THREE, X_FOUR, X_FIVE, X_SIX
+	public enum Zoom {
+		QUARTER, HALF, THREE_QUARTER, ONE, ONE_AND_QUARTER, ONE_AND_HALF, ONE_AND_THREE_QUARTER, TWO
 	}
 
 	private String userName = "";
 	private String password = "";
-	private String imageURL;
-	private List<String> recordValues;
-	private Point windowPosition;
-	private Point windowDimensions;
-	private int horizDivPosit;
-	private int vertDivPosit;
-	private Zoom zoomLevel;
-	private double scrollPosition;
-	private boolean isHighlighted;
-	private boolean isInverted;
+	private String imageURL = null;
+	private int currentProject = -1;
+	private List<String> recordValues = new ArrayList<>();
+	private Point windowPosition = new Point(100, 100);
+	private Point windowDimensions = new Point(1000, 650);
+	private int horizDivPosit = 442;
+	private int vertDivPosit = 328;
+	private Zoom zoomLevel = Zoom.ONE;
+	private double scrollPosition = 0.0;
+	private boolean isHighlighted = true;
+	private boolean isInverted = false;
+	private boolean isTableEntryTab = true;
+	private boolean isFileHelpTab = true;
 	transient private List<BatchStateListener> batchStateListeners = new ArrayList<>();
-
-
-	public BatchState() {
-		this.imageURL = null;
-		this.recordValues = new ArrayList<>();
-		this.windowPosition = new Point(100, 100);
-		this.windowDimensions = new Point(1000, 650);
-		this.horizDivPosit = 442;
-		this.vertDivPosit = 328;
-		this.zoomLevel = Zoom.X_ONE;
-		this.scrollPosition = 0.0;
-		this.isHighlighted = true;
-		this.isInverted = false;
-	}
-
-//	public BatchState(String imageURL, List<String> recordValues, Point windowPosition, Point windowDimensions,
-//					  int horizDivPosit, int vertDivPosit, Zoom zoomLevel, double scrollPosition, boolean isHighlighted, boolean isInverted) {
-//		this.imageURL = imageURL;
-//		this.recordValues = recordValues;
-//		this.windowPosition = windowPosition;
-//		this.windowDimensions = windowDimensions;
-//		this.horizDivPosit = horizDivPosit;
-//		this.vertDivPosit = vertDivPosit;
-//		this.zoomLevel = zoomLevel;
-//		this.scrollPosition = scrollPosition;
-//		this.isHighlighted = isHighlighted;
-//		this.isInverted = isInverted;
-//	}
 
 	public void addBSListener(BatchStateListener bsListener) {
 		this.batchStateListeners.add(bsListener);
@@ -83,6 +58,17 @@ public class BatchState {
 
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
+		for (BatchStateListener bsListener : batchStateListeners) {
+			bsListener.ImageURLChanged();
+		}
+	}
+
+	public void setCurrentProjectId(int currentProject) {
+		this.currentProject = currentProject;
+	}
+
+	public int getCurrentProjectId() {
+		return currentProject;
 	}
 
 	public List<String> getRecordValues() {
@@ -131,6 +117,9 @@ public class BatchState {
 
 	public void setZoomLevel(Zoom zoomLevel) {
 		this.zoomLevel = zoomLevel;
+		for (BatchStateListener bsListener : batchStateListeners) {
+			bsListener.ZoomedChanged();
+		}
 	}
 
 	public double getScrollPosition() {
@@ -155,6 +144,38 @@ public class BatchState {
 
 	public void setInverted(boolean inverted) {
 		isInverted = inverted;
+	}
+
+	public boolean isTableEntryTab() {
+		return isTableEntryTab;
+	}
+
+	public void setTableEntryTab(boolean tableEntryTab) {
+		isTableEntryTab = tableEntryTab;
+	}
+
+	public boolean isFormEntryTab() {
+		return !isTableEntryTab;
+	}
+
+	public void setFormEntryTab(boolean formEntryTab) {
+		isTableEntryTab = !formEntryTab;
+	}
+
+	public boolean isImageNavigationTab() {
+		return !isFileHelpTab;
+	}
+
+	public void setImageNavigationTab(boolean imageNavigationTab) {
+		isFileHelpTab = !imageNavigationTab;
+	}
+
+	public boolean isFileHelpTab() {
+		return isFileHelpTab;
+	}
+
+	public void setFileHelpTab(boolean fileHelpTab) {
+		isFileHelpTab = fileHelpTab;
 	}
 
 	public List<BatchStateListener> getBatchStateListeners() {

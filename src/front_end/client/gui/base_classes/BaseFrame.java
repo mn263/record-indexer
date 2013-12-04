@@ -1,6 +1,6 @@
-package front_end.client.gui.might_not_use;
+package front_end.client.gui.base_classes;
 
-import front_end.client.gui.controllers.ClientController;
+import front_end.client.gui.ClientController;
 
 import javax.swing.*;
 

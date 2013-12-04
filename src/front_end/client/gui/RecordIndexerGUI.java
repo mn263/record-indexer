@@ -1,7 +1,5 @@
 package front_end.client.gui;
 
-import front_end.client.gui.controllers.ClientController;
-
 import java.awt.*;
 
 public class RecordIndexerGUI {

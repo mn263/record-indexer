@@ -1,6 +1,6 @@
 package front_end.client.gui.gui_panels.indexer_view.menu_bar;
 
-import front_end.client.gui.controllers.ClientController;
+import front_end.client.gui.ClientController;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

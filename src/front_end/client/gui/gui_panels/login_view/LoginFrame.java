@@ -1,7 +1,7 @@
 package front_end.client.gui.gui_panels.login_view;
 
-import front_end.client.gui.controllers.ClientController;
-import front_end.client.gui.might_not_use.BaseFrame;
+import front_end.client.gui.ClientController;
+import front_end.client.gui.base_classes.BaseFrame;
 import shared.communication.results.ValidateUser_Result;
 
 import javax.swing.*;

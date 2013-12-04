@@ -1,14 +1,10 @@
 package front_end.client.gui.gui_panels.indexer_view.image_section;
 
 
-import front_end.client.gui.BasePanel;
-import front_end.client.gui.controllers.ClientController;
+import front_end.client.gui.ClientController;
+import front_end.client.gui.base_classes.BasePanel;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -18,40 +14,33 @@ import java.net.URL;
  */
 public class ImagePanel extends BasePanel {
 
-//	If no one is logged in, or no batch is currently being indexed by the logged in user, the Image Panel should be empty.
-//	The Image Panel should highlight the currently-selected record field (if highlights are turned on).
-//	The Image Panel should invert the image (if image inversion is turned on).
-//	The user should be able to select a record field by clicking on it with their mouse.
-//	The user should be able to move the image in the panel by dragging it with their mouse.
-//	The user should be able to zoom the image in and out with their mouse scroll wheel
-//		(just like the “Zoom In”and “Zoom Out”buttons in the button bar). Zooming should be done relative to the center point of the currently visible area. That is, as zooming occurs, the point at the center of the view should remain fixed.
+//	TODO: The Image Panel should highlight the currently-selected record field (if highlights are turned on).
+//	TODO: The Image Panel should invert the image (if image inversion is turned on).
+//	TODO: The user should be able to select a record field by clicking on it with their mouse.
+//	TODO: The user should be able to zoom the image in and out with their mouse scroll wheel. Zooming should be done relative to the center point of the currently visible area. That is, as zooming occurs, the point at the center of the view should remain fixed.
 
 
-	private JLabel imageLabel;
+	private DrawingComponent component;
+
 
 	public ImagePanel(ClientController clientController) {
 		super(clientController);
-
-
-		imageLabel = new JLabel();
-//		imageLabel.setSize(600, 600);
-//		setSize(new Dimension(600, 300));
 		setBackground(Color.GRAY);
-//		add(imageLabel);
+		component = new DrawingComponent(getClientController());
+		add(component);
+//		add(component, BorderLayout.CENTER);
 	}
 
-	public void changeImage(URL imageURL) {
+	public void updateImage() {
+		String imageURL = getClientController().getBatchState().getImageURL();
 		try {
-
-			BufferedImage image = ImageIO.read(imageURL);
-			Image scaledImage = image.getScaledInstance(400, 300, Image.SCALE_SMOOTH);
-			imageLabel.setIcon(new ImageIcon(scaledImage));
-		} catch (IOException ex) {
-			System.out.println("Could not read image");
+			component.changeImage(new URL(imageURL));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public void clearImage() {
-		imageLabel.setIcon(null);
+	public void updateZoom() {
+		component.updateZoom();
 	}
 }

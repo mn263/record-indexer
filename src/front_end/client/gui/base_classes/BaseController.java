@@ -1,5 +1,7 @@
 
-package front_end.client.gui.controllers;
+package front_end.client.gui.base_classes;
+
+import front_end.client.gui.ClientController;
 
 public class BaseController {
 

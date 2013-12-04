@@ -1,6 +1,5 @@
 package front_end.client.gui;
 
-import front_end.client.gui.controllers.ClientController;
 import front_end.client.gui.gui_panels.indexer_view.IndexerController;
 import front_end.client.gui.gui_panels.login_view.LoginController;
 import front_end.client.gui.gui_panels.login_view.LoginListener;
@@ -46,7 +45,6 @@ public class RecordIndexerInitializer {
 	ActionListener restartListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//				TODO: on logout do the following
 			clientController.saveBatchState();
 			indexerController.dispose();
 			startIndexer();
