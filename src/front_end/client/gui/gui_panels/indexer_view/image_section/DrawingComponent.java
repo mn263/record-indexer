@@ -2,6 +2,7 @@ package front_end.client.gui.gui_panels.indexer_view.image_section;
 
 import front_end.client.gui.ClientController;
 import front_end.client.gui.batch_state.BatchState;
+import shared.communication.results.DownloadBatch_Result;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,10 +13,10 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 
 @SuppressWarnings("serial")
@@ -24,16 +25,15 @@ public class DrawingComponent extends JComponent {
 	private static Image NULL_IMAGE = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
 
 	protected ClientController clientController;
-	private ArrayList<DragableRect> shapes;
-	private DragableRect selectedCell;
+	protected BatchState batchState;
+	private DragableRect shape;
 	private DragableImage image;
 	private Point2D lastPoint;
 
-	public DrawingComponent(ClientController clientController) {
+	public DrawingComponent(final ClientController clientController) {
 		this.clientController = clientController;
-
-		shapes = new ArrayList<>();
-		selectedCell = null;
+		this.batchState = clientController.getBatchState();
+		shape = null;
 
 		this.setBackground(Color.GRAY);
 		int AREA_WIDTH = 1000;
@@ -48,22 +48,17 @@ public class DrawingComponent extends JComponent {
 			public void mouseDragged(MouseEvent e) {
 				int dx = e.getX() - (int) lastPoint.getX();
 				int dy = e.getY() - (int) lastPoint.getY();
-				for (DragableShape shape : shapes) {
-					shape.adjustPosition(dx, dy);
-				}
+				adjustShapePositions(dx, dy);
 				lastPoint = new Point2D.Double(e.getX(), e.getY());
 				DrawingComponent.this.repaint();
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				selectedCell = null;
-				for (DragableRect shape : shapes) {
-					if (shape.contains((Graphics2D) DrawingComponent.this.getGraphics(), e.getX(), e.getY())) {
-						selectedCell = shape;
-					}
-				}
 				lastPoint = new Point2D.Double(e.getX(), e.getY());
+				if (clientController.getBatchState().hasDownloadedBatch()) {
+					image.contains((Graphics2D) getGraphics(), e.getX(), e.getY());
+				}
 			}
 
 			@Override
@@ -73,55 +68,130 @@ public class DrawingComponent extends JComponent {
 
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
-//				TODO: to implement this just change the batch's zoom and the rest will be taken care of
-//				int scrollAmount;
-//				if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-//					scrollAmount = e.getUnitsToScroll();
-//				} else {
-//					scrollAmount = e.getWheelRotation();
-//				}
-//
-//				int dx = 0;
-//				int dy = 0;
-//				if (e.isShiftDown()) {
-//					dx = scrollAmount;
-//				} else {
-//					dy = scrollAmount;
-//				}
-//
-//				adjustShapePositions(dx, dy);
+				int scrollAmount;
+				if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+					scrollAmount = e.getUnitsToScroll();
+				} else {
+					scrollAmount = e.getWheelRotation();
+				}
+
+				BatchState.Zoom zoom = batchState.getZoomLevel();
+				if (scrollAmount > 0) {
+					zoomIn(zoom);
+				} else {
+					zoomOut(zoom);
+				}
 			}
 		};
 		this.addMouseListener(mouseAdapter);
 		this.addMouseMotionListener(mouseAdapter);
 		this.addMouseWheelListener(mouseAdapter);
 
-		String imageURL = clientController.getBatchState().getImageURL();
-		try {
-			if (imageURL == null) {
-				image = new DragableImage(NULL_IMAGE, -300, -300, clientController);
-			} else {
-				changeImage(new URL(imageURL));
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+		if (batchState.hasDownloadedBatch()) {
+			changeImage();
+		} else {
+			image = new DragableImage(NULL_IMAGE, -300, -300, clientController);
 		}
 	}
 
-	public void changeImage(URL imageURL) {
+	private void zoomIn(BatchState.Zoom zoom) {
+		switch (zoom) {
+			case QUARTER:
+				break;
+			case HALF:
+				batchState.setZoomLevel(BatchState.Zoom.QUARTER);
+				break;
+			case THREE_QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.HALF);
+				break;
+			case ONE:
+				batchState.setZoomLevel(BatchState.Zoom.THREE_QUARTER);
+				break;
+			case ONE_AND_QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.ONE);
+				break;
+			case ONE_AND_HALF:
+				batchState.setZoomLevel(BatchState.Zoom.ONE_AND_QUARTER);
+				break;
+			case ONE_AND_THREE_QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.ONE_AND_HALF);
+				break;
+			case TWO:
+				batchState.setZoomLevel(BatchState.Zoom.ONE_AND_THREE_QUARTER);
+				break;
+			default:
+				System.out.println("The zoom level was an invalid one");
+				break;
+		}
+	}
+
+	private void zoomOut(BatchState.Zoom zoom) {
+		switch (zoom) {
+			case QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.HALF);
+				break;
+			case HALF:
+				batchState.setZoomLevel(BatchState.Zoom.THREE_QUARTER);
+				break;
+			case THREE_QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.ONE);
+				break;
+			case ONE:
+				batchState.setZoomLevel(BatchState.Zoom.ONE_AND_QUARTER);
+				break;
+			case ONE_AND_QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.ONE_AND_HALF);
+				break;
+			case ONE_AND_HALF:
+				batchState.setZoomLevel(BatchState.Zoom.ONE_AND_THREE_QUARTER);
+				break;
+			case ONE_AND_THREE_QUARTER:
+				batchState.setZoomLevel(BatchState.Zoom.TWO);
+				break;
+			case TWO:
+				break;
+			default:
+				System.out.println("The zoom level was an invalid one");
+				break;
+		}
+	}
+
+	public void changeImage() {
 		Image batchImage = null;
+		BufferedImage bufferedImage = null;
 		try {
-			BufferedImage bufferedImage = ImageIO.read(imageURL);
-			batchImage = bufferedImage.getScaledInstance(1000, -1, Image.SCALE_SMOOTH);
+			URL imageURL = new URL(clientController.getBatchState().getDownloadBatchResult().getImageURL());
+			bufferedImage = ImageIO.read(imageURL);
+			int width = bufferedImage.getWidth();
+			batchImage = bufferedImage.getScaledInstance(width, -1, Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		assert batchImage != null;
-		image = new DragableImage(batchImage, -300, -300, clientController);
+		if (batchState.isInverted()) {
+//			changeImage();
+//			BufferedImage img2 = bufferedImage;
+//			if(invert) {
+			batchImage = new RescaleOp(-1.0f, 255.0f, null).filter(bufferedImage, null);
+//			}
+		}
 
-//		TODO: add all the shapes here
-//		shapes.add(new DragableRect(new Rectangle2D.Double(AREA_WIDTH/2 - 400, AREA_HEIGHT/2 - 400, 200, 200), Color.BLUE));
+		image = new DragableImage(batchImage, -300, -300, clientController);
 		this.repaint();
+	}
+
+	private void createShape(Point topLeftCorner) {
+		DownloadBatch_Result result = batchState.getDownloadBatchResult();
+		double firstYCoord = result.getFirstYCoord();
+		double recordHeight = result.getRecordHeight();
+		int selectedCellRow = batchState.getSelectedRow();
+		int selectedCellColumn = batchState.getSelectedColumn();
+		double cellYCoord = topLeftCorner.getY() + firstYCoord + (recordHeight * selectedCellRow);
+		DownloadBatch_Result.FieldInformation field = result.getFieldInformationList().get(selectedCellColumn);
+		double xCoord = field.setXCoord();
+		double shapeWidth = field.getPixelWidth();
+		double cellXCoord = topLeftCorner.getX() + xCoord;
+		shape = new DragableRect(new Rectangle2D.Double(cellXCoord, cellYCoord, shapeWidth, recordHeight));
 	}
 
 	public void updateZoom() {
@@ -130,17 +200,12 @@ public class DrawingComponent extends JComponent {
 
 	private void adjustShapePositions(double dx, double dy) {
 		image.adjustPosition(dx, dy);
-		for (DragableRect shape : shapes) {
-			shape.adjustPosition(dx, dy);
-		}
 		this.repaint();
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
-
 		super.paintComponent(g);
-
 		Graphics2D g2 = (Graphics2D) g;
 		drawBackground(g2);
 		drawShapes(g2);
@@ -153,9 +218,19 @@ public class DrawingComponent extends JComponent {
 
 	private void drawShapes(Graphics2D g2) {
 		image.draw(g2);
-		for (DragableRect shape : shapes) {
+		if (batchState.hasDownloadedBatch() && batchState.isHighlighted()) {
+			createShape(image.topLeftCorner);
 			shape.draw(g2);
 		}
+	}
+
+	public void updateRecordSelected() {
+		repaint();
+	}
+
+	public void invertImage() {
+		changeImage();
+		repaint();
 	}
 }
 
@@ -172,11 +247,9 @@ interface DragableShape {
 class DragableRect implements DragableShape {
 
 	private Rectangle2D rect;
-	private Color color;
 
-	public DragableRect(Rectangle2D rect, Color color) {
+	public DragableRect(Rectangle2D rect) {
 		this.rect = rect;
-		this.color = color;
 	}
 
 	@Override
@@ -191,16 +264,16 @@ class DragableRect implements DragableShape {
 
 	@Override
 	public void draw(Graphics2D g2) {
-		g2.setColor(color);
+		Color blue = new Color(66, 158, 255, 212);
+		g2.setColor(blue);
 		g2.fill(rect);
-		// OR g2.fillRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
 	}
 }
 
 class DragableImage implements DragableShape {
 
 	private Image image;
-	private Point topLeftCorner;
+	public Point topLeftCorner;
 	private int imageWidth;
 	private int imageHeight;
 	private ClientController clientController;
@@ -215,9 +288,52 @@ class DragableImage implements DragableShape {
 
 	@Override
 	public boolean contains(Graphics2D g2, double x, double y) {
-		System.out.println("Clicked--> (" + x + ", " + y + ")");
-		System.out.println("topleft--> (" + topLeftCorner.getX() + ", " + topLeftCorner.getY() + ")");
-		return true;
+		int selectedRow = getSelectedRow(y);
+		int selectedColumn = getSelectedColumn(x);
+		if (selectedRow < 0 || selectedColumn < 0) {
+			return false;
+		} else {
+			clientController.getBatchState().changeSelectedCell(selectedRow, selectedColumn);
+			return true;
+		}
+	}
+
+	private int getSelectedRow(double y) {
+		double convertedY;
+		double zoom = getZoomScale();
+		convertedY = y - topLeftCorner.getY() * zoom - 200;
+		convertedY = convertedY / zoom;
+		BatchState batchState = clientController.getBatchState();
+		DownloadBatch_Result result = batchState.getDownloadBatchResult();
+		double firstYCoord = result.getFirstYCoord();
+		int rowCount = result.getRecordCount();
+		double recordHeight = result.getRecordHeight();
+		convertedY = convertedY - firstYCoord;
+		for (int row = 0; row < rowCount; row++) {
+			convertedY = convertedY - recordHeight;
+			if (-recordHeight < convertedY && convertedY < 0) {
+				return row;
+			}
+		}
+		return -1;
+	}
+
+	private int getSelectedColumn(double x) {
+		double convertedX;
+		double zoom = getZoomScale();
+		convertedX = x - topLeftCorner.getX() * zoom - 500;
+		convertedX = convertedX / zoom;
+		BatchState batchState = clientController.getBatchState();
+		DownloadBatch_Result result = batchState.getDownloadBatchResult();
+		List<DownloadBatch_Result.FieldInformation> fieldInfoList = result.getFieldInformationList();
+		int columnNumber = 0;
+		for (DownloadBatch_Result.FieldInformation field : fieldInfoList) {
+			if (convertedX > field.setXCoord() && convertedX < (field.setXCoord() + field.getPixelWidth())) {
+				return columnNumber;
+			}
+			columnNumber++;
+		}
+		return -1;
 	}
 
 	@Override
@@ -234,7 +350,7 @@ class DragableImage implements DragableShape {
 		g2.drawImage(image, (int) topLeftCorner.getX(), (int) topLeftCorner.getY(), imageWidth, imageHeight, null);
 	}
 
-	public double getZoomScale() {
+	private double getZoomScale() {
 		BatchState.Zoom zoom = clientController.getBatchState().getZoomLevel();
 		switch (zoom) {
 			case QUARTER:

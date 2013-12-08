@@ -1,5 +1,7 @@
 package front_end.client.gui.batch_state;
 
+import shared.communication.results.DownloadBatch_Result;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,23 +19,30 @@ public class BatchState {
 
 	private String userName = "";
 	private String password = "";
-	private String imageURL = null;
-	private int currentProject = -1;
+	private boolean hasDownloadedBatch = false;
 	private List<String> recordValues = new ArrayList<>();
 	private Point windowPosition = new Point(100, 100);
 	private Point windowDimensions = new Point(1000, 650);
 	private int horizDivPosit = 442;
 	private int vertDivPosit = 328;
 	private Zoom zoomLevel = Zoom.ONE;
-	private double scrollPosition = 0.0;
 	private boolean isHighlighted = true;
 	private boolean isInverted = false;
 	private boolean isTableEntryTab = true;
 	private boolean isFileHelpTab = true;
-	transient private List<BatchStateListener> batchStateListeners = new ArrayList<>();
+	private DownloadBatch_Result result;
+	private int selectedColumn = 0;
+	private int selectedRow = 0;
+	transient private BatchStateListener batchStateListener;
 
 	public void addBSListener(BatchStateListener bsListener) {
-		this.batchStateListeners.add(bsListener);
+		this.batchStateListener = bsListener;
+	}
+
+	public void changeSelectedCell(int row, int column) {
+		this.selectedRow = row;
+		this.selectedColumn = column;
+		batchStateListener.RecordSelectionChanged(row, column);
 	}
 
 	public String getUserName() {
@@ -52,23 +61,8 @@ public class BatchState {
 		this.password = password;
 	}
 
-	public String getImageURL() {
-		return imageURL;
-	}
-
-	public void setImageURL(String imageURL) {
-		this.imageURL = imageURL;
-		for (BatchStateListener bsListener : batchStateListeners) {
-			bsListener.ImageURLChanged();
-		}
-	}
-
-	public void setCurrentProjectId(int currentProject) {
-		this.currentProject = currentProject;
-	}
-
-	public int getCurrentProjectId() {
-		return currentProject;
+	public boolean hasDownloadedBatch() {
+		return hasDownloadedBatch;
 	}
 
 	public List<String> getRecordValues() {
@@ -117,17 +111,7 @@ public class BatchState {
 
 	public void setZoomLevel(Zoom zoomLevel) {
 		this.zoomLevel = zoomLevel;
-		for (BatchStateListener bsListener : batchStateListeners) {
-			bsListener.ZoomedChanged();
-		}
-	}
-
-	public double getScrollPosition() {
-		return scrollPosition;
-	}
-
-	public void setScrollPosition(double scrollPosition) {
-		this.scrollPosition = scrollPosition;
+		batchStateListener.ZoomedChanged();
 	}
 
 	public boolean isHighlighted() {
@@ -136,6 +120,7 @@ public class BatchState {
 
 	public void setHighlighted(boolean highlighted) {
 		isHighlighted = highlighted;
+		batchStateListener.highlightToggled();
 	}
 
 	public boolean isInverted() {
@@ -144,6 +129,7 @@ public class BatchState {
 
 	public void setInverted(boolean inverted) {
 		isInverted = inverted;
+		batchStateListener.invertImageToggled();
 	}
 
 	public boolean isTableEntryTab() {
@@ -178,11 +164,21 @@ public class BatchState {
 		isFileHelpTab = fileHelpTab;
 	}
 
-	public List<BatchStateListener> getBatchStateListeners() {
-		return batchStateListeners;
+	public DownloadBatch_Result getDownloadBatchResult() {
+		return result;
 	}
 
-	public void setBatchStateListeners(List<BatchStateListener> batchStateListeners) {
-		this.batchStateListeners = batchStateListeners;
+	public void setDownloadBatchResult(DownloadBatch_Result result) {
+		this.result = result;
+		this.hasDownloadedBatch = true;
+		batchStateListener.BatchDownloaded();
+	}
+
+	public int getSelectedColumn() {
+		return selectedColumn;
+	}
+
+	public int getSelectedRow() {
+		return selectedRow;
 	}
 }

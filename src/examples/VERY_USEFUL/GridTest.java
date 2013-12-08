@@ -26,7 +26,6 @@ public class GridTest {
  */
 class ButtonFrame2 extends JFrame {
 	public ButtonFrame2() {
-//	   TODO: could tell me how to do good layouts
 		setTitle("Grid Test");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 

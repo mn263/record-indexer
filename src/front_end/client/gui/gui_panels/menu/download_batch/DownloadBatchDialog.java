@@ -2,6 +2,7 @@ package front_end.client.gui.gui_panels.menu.download_batch;
 
 import front_end.client.gui.ClientController;
 import front_end.client.gui.gui_panels.menu.download_batch.view_sample.ViewSampleController;
+import shared.communication.results.DownloadBatch_Result;
 import shared.communication.results.GetProjects_Result;
 
 import javax.swing.*;
@@ -74,19 +75,14 @@ public class DownloadBatchDialog extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dispose();
-			String imageUrl = "";
-			int projectId = -1;
 			String selectedProject;
 			selectedProject = (String) downloadBatchPanel.getComboBox().getSelectedItem();
 			for (GetProjects_Result.ProjectInfo project : projects.getProjects()) {
 				if (selectedProject.equalsIgnoreCase(project.getProjectTitle())) {
-					imageUrl = clientController.getSampleImage(project.getProjectId());
-					projectId = project.getProjectId();
+					DownloadBatch_Result result = clientController.downloadBatch(Integer.toString(project.getProjectId()));
+					clientController.getBatchState().setDownloadBatchResult(result);
+					clientController.saveBatchState();
 				}
-			}
-			if (projectId != -1) {
-				clientController.getBatchState().setImageURL(imageUrl);
-				clientController.getBatchState().setCurrentProjectId(projectId);
 			}
 		}
 	};

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 
 
 public class FontSelector {
-//	TODO: the zoom from this could be very useful
 
 	public static void main(String[] args) {
 

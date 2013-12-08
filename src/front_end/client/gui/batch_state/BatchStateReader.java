@@ -21,7 +21,7 @@ public class BatchStateReader {
 		this.batchState = batchState;
 	}
 
-	public void readBatchState() {
+	public BatchState readBatchState() {
 
 		XStream xStream = new XStream(new DomDriver());
 		String userName = batchState.getUserName();
@@ -31,9 +31,7 @@ public class BatchStateReader {
 
 			File file = new File("batch_state_files/" + userName + "_batchState.xml");
 			if (!file.exists()) {
-//				TODO: figure out what to do here
-				return;
-//				file.createNewFile();
+				return null;
 			}
 			FileReader fileReader = new FileReader(file);
 			br = new BufferedReader(fileReader);
@@ -43,8 +41,7 @@ public class BatchStateReader {
 			while ((currentLine = br.readLine()) != null) {
 				batchStateXML += currentLine;
 			}
-
-			batchState = (BatchState) xStream.fromXML(batchStateXML);
+			return (BatchState) xStream.fromXML(batchStateXML);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -55,5 +52,6 @@ public class BatchStateReader {
 				ex.printStackTrace();
 			}
 		}
+		return null;
 	}
 }

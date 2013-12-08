@@ -20,9 +20,6 @@ import java.util.TreeMap;
 @SuppressWarnings("serial")
 public class ColorTable extends JFrame {
 
-//	TODO: use this to learn how to create/select cells (colorTable basic might be best for this)
-
-
 	private ArrayList<ColorScheme> colorSchemes;
 	private ColorTableModel tableModel;
 	private JTable table;

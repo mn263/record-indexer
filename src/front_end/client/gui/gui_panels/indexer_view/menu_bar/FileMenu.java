@@ -21,7 +21,7 @@ public class FileMenu extends JMenu {
 		setMnemonic('f');
 
 		dnldBatchMenu = new JMenuItem("Download Batch", KeyEvent.VK_D);
-		if (clientController.getBatchState().getImageURL() != null) {
+		if (clientController.getBatchState().hasDownloadedBatch()) {
 			dnldBatchMenu.setEnabled(false);
 		}
 		add(dnldBatchMenu);

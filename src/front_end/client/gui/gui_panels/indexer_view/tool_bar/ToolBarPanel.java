@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
  */
 public class ToolBarPanel extends BasePanel {
 
-//	The “Zoom In”and “Zoom Out”buttons should adjust the scale (i.e., zoom level) of the image. Zooming should be done
+	//	The “Zoom In”and “Zoom Out”buttons should adjust the scale (i.e., zoom level) of the image. Zooming should be done
 // 	relative to the center point of the currently visible area. That is, as zooming occurs, the point at the center of
 // 	the view should remain fixed.
 //	The “Invert Image”button should turn image inversion on and off.
@@ -25,6 +25,13 @@ public class ToolBarPanel extends BasePanel {
 //	The “Submit”button should submit the current batch to the Server, and put the Indexing Window in an empty state.
 // 	When a batch is submitted, all record field values entered by the user should be sent to the Server.
 // 	The Server should save the indexed values, and increment the number of records indexed by the user.
+	private JButton zoomInButton;
+	private JButton zoomOutButton;
+	private JButton invertButton;
+	private JButton toggleButton;
+	private JButton saveButton;
+	private JButton submitButton;
+
 
 	public ToolBarPanel(ClientController clientController) {
 		super(clientController);
@@ -32,12 +39,12 @@ public class ToolBarPanel extends BasePanel {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		//create buttons
-		JButton zoomInButton = new JButton("Zoom In");
-		JButton zoomOutButton = new JButton("Zoom Out");
-		JButton invertButton = new JButton("Invert Image");
-		JButton toggleButton = new JButton("Toggle Highlights");
-		JButton saveButton = new JButton("Save");
-		JButton submitButton = new JButton("Submit");
+		zoomInButton = new JButton("Zoom In");
+		zoomOutButton = new JButton("Zoom Out");
+		invertButton = new JButton("Invert Image");
+		toggleButton = new JButton("Toggle Highlights");
+		saveButton = new JButton("Save");
+		submitButton = new JButton("Submit");
 
 		//add them to the panel
 		add(zoomInButton);
@@ -46,7 +53,14 @@ public class ToolBarPanel extends BasePanel {
 		add(toggleButton);
 		add(saveButton);
 		add(submitButton);
-
+		if (!clientController.getBatchState().hasDownloadedBatch()) {
+			zoomInButton.setEnabled(false);
+			zoomOutButton.setEnabled(false);
+			invertButton.setEnabled(false);
+			toggleButton.setEnabled(false);
+			saveButton.setEnabled(false);
+			submitButton.setEnabled(false);
+		}
 		//create button listeners
 		zoomInButton.addActionListener(new ActionListener() {
 			@Override
@@ -65,14 +79,16 @@ public class ToolBarPanel extends BasePanel {
 		invertButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: implement invert image
+				BatchState bs = getClientController().getBatchState();
+				bs.setInverted(!bs.isInverted());
 			}
 		});
 
 		toggleButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: implement toggle highlights
+				BatchState bs = getClientController().getBatchState();
+				bs.setHighlighted(!bs.isHighlighted());
 			}
 		});
 
@@ -158,5 +174,23 @@ public class ToolBarPanel extends BasePanel {
 			getClientController().saveBatchState();
 		}
 	};
+
+	public void updateToolBar() {
+		if (getClientController().getBatchState().hasDownloadedBatch()) {
+			zoomInButton.setEnabled(true);
+			zoomOutButton.setEnabled(true);
+			invertButton.setEnabled(true);
+			toggleButton.setEnabled(true);
+			saveButton.setEnabled(true);
+			submitButton.setEnabled(true);
+		} else {
+			zoomInButton.setEnabled(false);
+			zoomOutButton.setEnabled(false);
+			invertButton.setEnabled(false);
+			toggleButton.setEnabled(false);
+			saveButton.setEnabled(false);
+			submitButton.setEnabled(false);
+		}
+	}
 }
 

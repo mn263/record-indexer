@@ -26,11 +26,14 @@ import java.beans.PropertyChangeListener;
  */
 public class IndexerFrame extends BaseFrame {
 
+	private ToolBarPanel toolBarPanel;
 	private JMenuItem dnldBatchMenu;
 	private JMenuItem exitMenu;
 	private JSplitPane splitHorizontalPane;
 	private JSplitPane splitVerticalPane;
 	private ImagePanel imagePanel;
+	private BottomLeftPanel bottomLeftPanel;
+	private BottomRightPanel bottomRightPanel;
 
 	public IndexerFrame(ClientController clientController, ActionListener restartListener) {
 		super(clientController);
@@ -53,7 +56,7 @@ public class IndexerFrame extends BaseFrame {
 		menuBar.add(fileMenu);
 
 		//add menu(tool)-bar
-		ToolBarPanel toolBarPanel = new ToolBarPanel(clientController);
+		toolBarPanel = new ToolBarPanel(clientController);
 		add(toolBarPanel, BorderLayout.NORTH);
 
 		//add imagePanel
@@ -69,8 +72,8 @@ public class IndexerFrame extends BaseFrame {
 	}
 
 	private void addHorizontalDivider() {
-		BottomLeftPanel bottomLeftPanel = new BottomLeftPanel(getClientController());
-		BottomRightPanel bottomRightPanel = new BottomRightPanel(getClientController());
+		bottomLeftPanel = new BottomLeftPanel(getClientController());
+		bottomRightPanel = new BottomRightPanel(getClientController());
 		splitHorizontalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, bottomLeftPanel, bottomRightPanel);
 		splitHorizontalPane.setDividerLocation(getClientController().getBatchState().getHorizDivPosit());
 		splitHorizontalPane.addPropertyChangeListener(horizontalSplitListener);
@@ -136,15 +139,33 @@ public class IndexerFrame extends BaseFrame {
 		}
 	};
 
-	public void updateImage() {
-		imagePanel.updateImage();
-		//TODO: update the image in the bottom-left panel
+	public void updateForNewBatch() {
+		imagePanel.reloadImage();
+		bottomLeftPanel.reloadTabs();
 		//TODO: update the image in the bottom-right panel
+	}
+
+	public void updateForRecordSelectionChange(int row, int column) {
+		imagePanel.updateRecordSelected();
+		bottomLeftPanel.updateTabs(row, column);
 	}
 
 	public void updateZoom() {
 		imagePanel.updateZoom();
-		//TODO: update the image in the bottom-left panel
 		//TODO: update the image in the bottom-right panel
+	}
+
+	public ToolBarPanel getToolBarPanel() {
+		return toolBarPanel;
+	}
+
+
+	public void highlightToggled() {
+		imagePanel.toggleHighlight();
+
+	}
+
+	public void invertImageToggled() {
+		imagePanel.invertImage();
 	}
 }

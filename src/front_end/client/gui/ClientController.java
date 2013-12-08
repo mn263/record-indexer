@@ -29,7 +29,10 @@ public class ClientController {
 
 	public void readBatchState() {
 		BatchStateReader batchStateReader = new BatchStateReader(batchState);
-		batchStateReader.readBatchState();
+		BatchState readBS = batchStateReader.readBatchState();
+		if (readBS != null) {
+			batchState = readBS;
+		}
 	}
 
 	public ValidateUser_Result validateUser(String userName, String password) {
@@ -74,8 +77,10 @@ public class ClientController {
 	}
 
 
-	private DownloadBatch_Result downloadBatch(String userName, String password, String projectId) {
+	public DownloadBatch_Result downloadBatch(String projectId) {
 		if (projectId.matches(isNumberRegex)) {
+			String userName = getBatchState().getUserName();
+			String password = getBatchState().getPassword();
 			DownloadBatch_Result result = clientCommunicator.downloadBatch(new DownloadBatch_Params(userName, password, Integer.parseInt(projectId)));
 			result.setImageURL(getHostAndPort() + result.getImageURL());
 			return result;

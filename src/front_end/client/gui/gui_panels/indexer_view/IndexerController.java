@@ -3,7 +3,6 @@ package front_end.client.gui.gui_panels.indexer_view;
 import front_end.client.gui.ClientController;
 import front_end.client.gui.batch_state.BatchStateListener;
 
-import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
@@ -18,12 +17,38 @@ public class IndexerController {
 
 	public IndexerController(ClientController clientController, ActionListener restartListener) {
 		this.clientController = clientController;
+		BatchStateListener bsListener = new BatchStateListener() {
+			@Override
+			public void BatchDownloaded() {
+				indexerFrame.updateForNewBatch();
+				indexerFrame.getToolBarPanel().updateToolBar();
+			}
+
+			@Override
+			public void RecordSelectionChanged(int row, int column) {
+				indexerFrame.updateForRecordSelectionChange(row, column);
+			}
+
+			@Override
+			public void ZoomedChanged() {
+				indexerFrame.updateZoom();
+			}
+
+			@Override
+			public void highlightToggled() {
+				indexerFrame.highlightToggled();
+			}
+
+			@Override
+			public void invertImageToggled() {
+				indexerFrame.invertImageToggled();
+			}
+		};
 		clientController.getBatchState().addBSListener(bsListener);
 		openMainFrame(restartListener);
 	}
 
 	private void openMainFrame(ActionListener restartListener) {
-//		TODO: button bar should not be selectable until they have a batch
 		indexerFrame = new IndexerFrame(clientController, restartListener);
 		indexerFrame.setVisible(true);
 	}
@@ -32,26 +57,4 @@ public class IndexerController {
 		indexerFrame.dispose();
 	}
 
-	private BatchStateListener bsListener = new BatchStateListener() {
-		@Override
-		public void ImageURLChanged() {
-			indexerFrame.updateImage();
-//			TODO: enable/disable button-bar
-//			TODO: disable/enable download batch
-		}
-
-		@Override
-		public void RecordSelectionChanged(Point selectedCell) {
-			//TODO: change the image in the imagePanel
-			//TODO: update the image in the bottom-left panel
-			//TODO: update the image in the bottom-right panel
-		}
-
-		@Override
-		public void ZoomedChanged() {
-			indexerFrame.updateZoom();
-			//TODO: update the image-navigation panel
-			//TODO: update the image in the bottom-right panel
-		}
-	};
 }

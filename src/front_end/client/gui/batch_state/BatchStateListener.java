@@ -1,7 +1,5 @@
 package front_end.client.gui.batch_state;
 
-import java.awt.*;
-
 /**
  * User: matt
  * Date: 11/20/13
@@ -14,9 +12,13 @@ public interface BatchStateListener {
 //		BS.addListener(this)
 //	}
 
-	void ImageURLChanged();
+	void BatchDownloaded();
 
-	void RecordSelectionChanged(Point selectedCell);
+	void RecordSelectionChanged(int row, int column);
 
 	void ZoomedChanged();
+
+	void highlightToggled();
+
+	void invertImageToggled();
 }
