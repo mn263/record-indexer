@@ -9,14 +9,14 @@ public class RecordIndexerGUI {
 //		To make the client target work properly, you will need to modify the client target in your ANT build.xml file
 // 		to specify the full package name of the Java class that implements your Client.
 
-		String host = "localhost";
-		String port = "39640";
-		if (args.length == 2) {
+		String host;
+		String port;
+		try {
 			host = args[0];
 			port = args[1];
-		} else if (args.length == 1) {
-//			TODO: this should maybe be checked if it is a host or a port
-			host = args[0];
+		} catch (Exception e) {
+			host = "localhost";
+			port = "39640";
 		}
 
 		final ClientController clientController = new ClientController(host, port);

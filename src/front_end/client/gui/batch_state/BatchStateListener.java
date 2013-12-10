@@ -21,4 +21,6 @@ public interface BatchStateListener {
 	void highlightToggled();
 
 	void invertImageToggled();
+
+	void RecordValuesChanged();
 }

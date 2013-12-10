@@ -19,14 +19,15 @@ public class BottomLeftPanel extends BasePanel {
 
 	public BottomLeftPanel(ClientController clientController) {
 		super(clientController);
-
 		setLayout(new BorderLayout());
-
 		tabbedPane = new JTabbedPane();
 		tableEntry = new TableEntry(clientController);
 		formEntry = new FormEntry(clientController);
-		tabbedPane.addTab("Table Entry", tableEntry);
-		tabbedPane.addTab("Form Entry", formEntry);
+		JScrollPane scrollTableEntry = new JScrollPane(tableEntry);
+		JScrollPane scrollFormEntry = new JScrollPane(formEntry);
+		tabbedPane.addTab("Table Entry", scrollTableEntry);
+		scrollFormEntry.setAlignmentX(LEFT_ALIGNMENT);
+		tabbedPane.addTab("Form Entry", scrollFormEntry);
 		add(tabbedPane, BorderLayout.CENTER);
 	}
 
@@ -35,12 +36,21 @@ public class BottomLeftPanel extends BasePanel {
 		this.formEntry = new FormEntry(getClientController());
 		tabbedPane.removeTabAt(0);
 		tabbedPane.removeTabAt(0);
-		tabbedPane.addTab("Table Entry", tableEntry);
-		tabbedPane.addTab("Form Entry", formEntry);
+		JScrollPane scrollTableEntry = new JScrollPane(tableEntry);
+		JScrollPane scrollFormEntry = new JScrollPane(formEntry);
+		tabbedPane.addTab("Table Entry", scrollTableEntry);
+		scrollFormEntry.setAlignmentX(LEFT_ALIGNMENT);
+		tabbedPane.addTab("Form Entry", scrollFormEntry);
 	}
 
 	public void updateTabs(int row, int column) {
 		tableEntry.highlightCell(row, column + 1);
-//		TODO: update formEntry
+		formEntry.setSelectedCell(row);
+	}
+
+	public void updateRecordValues() {
+		tableEntry.updateCurrentRecord();
+//		tableEntry.fillTableWithSavedRecordValues();
+
 	}
 }

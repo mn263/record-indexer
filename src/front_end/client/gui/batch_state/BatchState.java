@@ -3,8 +3,6 @@ package front_end.client.gui.batch_state;
 import shared.communication.results.DownloadBatch_Result;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: matt
@@ -13,6 +11,16 @@ import java.util.List;
  */
 public class BatchState {
 
+	public void reset() {
+		this.hasDownloadedBatch = false;
+		this.result = null;
+		this.selectedColumn = 0;
+		this.selectedRow = 0;
+		this.recordValues = null;
+		batchStateListener.BatchDownloaded();
+
+	}
+
 	public enum Zoom {
 		QUARTER, HALF, THREE_QUARTER, ONE, ONE_AND_QUARTER, ONE_AND_HALF, ONE_AND_THREE_QUARTER, TWO
 	}
@@ -20,7 +28,6 @@ public class BatchState {
 	private String userName = "";
 	private String password = "";
 	private boolean hasDownloadedBatch = false;
-	private List<String> recordValues = new ArrayList<>();
 	private Point windowPosition = new Point(100, 100);
 	private Point windowDimensions = new Point(1000, 650);
 	private int horizDivPosit = 442;
@@ -34,6 +41,7 @@ public class BatchState {
 	private int selectedColumn = 0;
 	private int selectedRow = 0;
 	transient private BatchStateListener batchStateListener;
+	private String[][] recordValues;
 
 	public void addBSListener(BatchStateListener bsListener) {
 		this.batchStateListener = bsListener;
@@ -65,12 +73,30 @@ public class BatchState {
 		return hasDownloadedBatch;
 	}
 
-	public List<String> getRecordValues() {
+	public String[][] getRecordValues() {
 		return recordValues;
 	}
 
-	public void setRecordValues(List<String> recordValues) {
+	public String getRecordValue(int column, int row) {
+		return recordValues[column][row];
+	}
+
+
+	public void setRecordValues(String[][] recordValues) {
 		this.recordValues = recordValues;
+	}
+
+	public void setRecordValueFromTableEntryTable(String value, int column, int row) {
+		if (column >= 0) {
+			this.recordValues[column][row] = value;
+		}
+	}
+
+	public void setRecordValue(String value, int column, int row) {
+		if (column >= 0) {
+			this.recordValues[column][row] = value;
+			batchStateListener.RecordValuesChanged();
+		}
 	}
 
 	public Point getWindowPosition() {
@@ -170,6 +196,8 @@ public class BatchState {
 
 	public void setDownloadBatchResult(DownloadBatch_Result result) {
 		this.result = result;
+		this.recordValues = new String[result.getFieldCount()][result.getRecordCount()];
+
 		this.hasDownloadedBatch = true;
 		batchStateListener.BatchDownloaded();
 	}

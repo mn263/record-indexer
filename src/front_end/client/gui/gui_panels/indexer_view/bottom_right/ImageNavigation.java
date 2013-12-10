@@ -23,6 +23,5 @@ public class ImageNavigation extends BasePanel {
 
 	public ImageNavigation(ClientController clientController) {
 		super(clientController);
-
 	}
 }

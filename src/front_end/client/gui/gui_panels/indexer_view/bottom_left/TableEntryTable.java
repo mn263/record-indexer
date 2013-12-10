@@ -58,7 +58,6 @@ public class TableEntryTable extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int row, int column) {
-		System.out.println("getValueAt was called");
 		if (column == 0) {
 			return Integer.toString(row);
 		} else {
@@ -77,7 +76,7 @@ public class TableEntryTable extends AbstractTableModel {
 			RecordValuesRow recordValuesRow = recordValuesRows.get(row);
 			String cellVal = (String) value;
 			recordValuesRow.setRecordValue(cellVal, column);
-//			TODO: set the value in the batch state so that it can use the listener and update the other panels too
+			batchState.setRecordValueFromTableEntryTable((String) value, column - 1, row);
 		}
 	}
 }

@@ -19,8 +19,8 @@ public class DownloadBatchDialog extends JDialog {
 
 	private DownloadBatchPanel downloadBatchPanel;
 
-	private static final int LOGIN_WIDTH = 350;
-	private static final int LOGIN_HEIGHT = 100;
+	private static final int LOGIN_WIDTH = 450;
+	private static final int LOGIN_HEIGHT = 150;
 	private ClientController clientController;
 	private GetProjects_Result projects;
 

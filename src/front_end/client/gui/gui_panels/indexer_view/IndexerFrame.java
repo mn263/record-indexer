@@ -87,7 +87,7 @@ public class IndexerFrame extends BaseFrame {
 	}
 
 	private FileMenu addDropDownMenu(ActionListener restartListener) {
-		FileMenu fileMenu = new FileMenu(getClientController());
+		FileMenu fileMenu = new FileMenu();
 		dnldBatchMenu = fileMenu.getDnldBatchMenu();
 		JMenuItem logoutMenu = fileMenu.getLogoutMenu();
 		logoutMenu.addActionListener(restartListener);
@@ -139,20 +139,20 @@ public class IndexerFrame extends BaseFrame {
 		}
 	};
 
-	public void updateForNewBatch() {
+	public void updateForNewBatchStatus() {
 		imagePanel.reloadImage();
 		bottomLeftPanel.reloadTabs();
-		//TODO: update the image in the bottom-right panel
+		bottomRightPanel.updateTabs();
 	}
 
 	public void updateForRecordSelectionChange(int row, int column) {
 		imagePanel.updateRecordSelected();
 		bottomLeftPanel.updateTabs(row, column);
+		bottomRightPanel.updateTabs();
 	}
 
 	public void updateZoom() {
 		imagePanel.updateZoom();
-		//TODO: update the image in the bottom-right panel
 	}
 
 	public ToolBarPanel getToolBarPanel() {
@@ -162,10 +162,13 @@ public class IndexerFrame extends BaseFrame {
 
 	public void highlightToggled() {
 		imagePanel.toggleHighlight();
-
 	}
 
 	public void invertImageToggled() {
 		imagePanel.invertImage();
+	}
+
+	public void updateRecordValues() {
+		bottomLeftPanel.updateRecordValues();
 	}
 }

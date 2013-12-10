@@ -1,7 +1,5 @@
 package front_end.client.gui.gui_panels.indexer_view.menu_bar;
 
-import front_end.client.gui.ClientController;
-
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
@@ -16,14 +14,11 @@ public class FileMenu extends JMenu {
 	private JMenuItem logoutMenu;
 	private JMenuItem exitMenu;
 
-	public FileMenu(ClientController clientController) {
+	public FileMenu() {
 		super("File");
 		setMnemonic('f');
 
 		dnldBatchMenu = new JMenuItem("Download Batch", KeyEvent.VK_D);
-		if (clientController.getBatchState().hasDownloadedBatch()) {
-			dnldBatchMenu.setEnabled(false);
-		}
 		add(dnldBatchMenu);
 
 		logoutMenu = new JMenuItem("Logout", KeyEvent.VK_L);

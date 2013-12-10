@@ -97,7 +97,9 @@ public class ToolBarPanel extends BasePanel {
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: implment submit batch
+				getClientController().submitBatch();
+				getClientController().getBatchState().reset();
+//				TODO: save
 			}
 		});
 	}

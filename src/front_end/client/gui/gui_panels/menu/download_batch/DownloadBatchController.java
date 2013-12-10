@@ -19,9 +19,18 @@ public class DownloadBatchController extends BaseController {
 	}
 
 	private void openDownloadBatchDialog() {
+
 		DownloadBatchDialog downloadBatchDialog = new DownloadBatchDialog(clientController);
-		downloadBatchDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-		downloadBatchDialog.setVisible(true);
-		downloadBatchDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		if (clientController.getBatchState().hasDownloadedBatch()) {
+			downloadBatchDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+			downloadBatchDialog.setVisible(false);
+			downloadBatchDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+			JOptionPane.showMessageDialog(downloadBatchDialog.getContentPane(), "Only 1 batch at a time is allowed", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			downloadBatchDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+			downloadBatchDialog.setVisible(true);
+			downloadBatchDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		}
 	}
 }

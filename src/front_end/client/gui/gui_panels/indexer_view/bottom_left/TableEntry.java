@@ -2,6 +2,7 @@ package front_end.client.gui.gui_panels.indexer_view.bottom_left;
 
 import front_end.client.gui.ClientController;
 import front_end.client.gui.base_classes.BasePanel;
+import front_end.client.gui.batch_state.BatchState;
 import shared.communication.results.DownloadBatch_Result;
 
 import javax.swing.*;
@@ -20,16 +21,6 @@ import java.util.ArrayList;
  * Time: 8:35 PM
  */
 public class TableEntry extends BasePanel {
-//	If no one is logged in, or no batch is currently being indexed by the logged in user, the Table Entry Tab should be empty.
-//	When a batch is being indexed, the table should contain a “Record Number”column that displays record numbers and is
-//	read-only. The table should also contain editable columns for all of the project fields in the proper order.
-//	When the screen space allocated to the Table Entry Tab is too small to fully display the table, scroll bars should
-//	be provided so the user can scroll the view.
-//	The TAB key should move the field selection in a left-to-right, top-to-bottom order.
-//	Unrecognized field values should be highlighted red.
-//			Right-clicking on an unrecognized field value (i.e., one that is highlighted red) should bring up a context
-//	menu containing a “See Suggestions”menu item. Selecting the “See Suggestions”menu item should display the Suggestions Dialog. If the user selects a suggested value and clicks the “Use Suggestion”button, the selected value should replace the unrecognized value in the table.
-
 
 	private TableEntryTable tableModel;
 	private JTable table;
@@ -46,6 +37,7 @@ public class TableEntry extends BasePanel {
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.setCellSelectionEnabled(true);
 			table.getTableHeader().setReorderingAllowed(false);
+			fillTableWithSavedRecordValues();
 			MouseAdapter mouseAdapter = new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
@@ -67,6 +59,11 @@ public class TableEntry extends BasePanel {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					super.keyPressed(e);
+//					int selectedColumn = table.getSelectedColumn();
+//					int selectedRow = table.getSelectedRow();
+//					String value = (String) tableModel.getValueAt(selectedRow, selectedColumn);
+//					System.out.println("keyPressed -- setRecordValue");
+//					getClientController().getBatchState().setRecordValue(value, selectedColumn-1, selectedRow);
 				}
 
 				@Override
@@ -94,21 +91,25 @@ public class TableEntry extends BasePanel {
 			}
 
 			JScrollPane tableContainer = new JScrollPane(table);
-//			TODO: make it so that a scroll bar will appear when the area is too small
-//			TODO: make it so that the image changes when you hit tab or enter
-			tableContainer.createVerticalScrollBar();
 			add(tableContainer, BorderLayout.WEST);
 		}
 	}
 
-	private ArrayList<RecordValuesRow> generateRecordValues() {
+	public void fillTableWithSavedRecordValues() {
+		System.out.println("fillTableWithSavedRecordValues");
+		String[][] recordValues = getClientController().getBatchState().getRecordValues();
+		for (int column = 0; column < recordValues.length; column++) {
+			for (int row = 0; row < recordValues[column].length; row++) {
+				tableModel.setValueAt(recordValues[column][row], row, column + 1);
+			}
+		}
+	}
 
+	private ArrayList<RecordValuesRow> generateRecordValues() {
 		DownloadBatch_Result downloadBatchResult = getClientController().getBatchState().getDownloadBatchResult();
 		int numOfRecords = downloadBatchResult.getRecordCount();
 		int numOfFields = downloadBatchResult.getFieldCount();
-
 		ArrayList<RecordValuesRow> result = new ArrayList<>();
-
 		for (int i = 0; i < numOfRecords; i++) {
 			result.add(new RecordValuesRow(numOfFields));
 		}
@@ -118,5 +119,14 @@ public class TableEntry extends BasePanel {
 	public void highlightCell(int row, int column) {
 		table.setColumnSelectionInterval(column, column);
 		table.setRowSelectionInterval(row, row);
+	}
+
+	public void updateCurrentRecord() {
+		System.out.println("single record");
+		BatchState bs = getClientController().getBatchState();
+		String[][] recordValues = bs.getRecordValues();
+		int column = bs.getSelectedColumn();
+		int row = bs.getSelectedRow();
+		tableModel.setValueAt(recordValues[column][row], row, column + 1);
 	}
 }

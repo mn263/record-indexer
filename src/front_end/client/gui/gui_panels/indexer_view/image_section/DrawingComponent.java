@@ -87,11 +87,7 @@ public class DrawingComponent extends JComponent {
 		this.addMouseMotionListener(mouseAdapter);
 		this.addMouseWheelListener(mouseAdapter);
 
-		if (batchState.hasDownloadedBatch()) {
-			changeImage();
-		} else {
-			image = new DragableImage(NULL_IMAGE, -300, -300, clientController);
-		}
+		changeImage();
 	}
 
 	private void zoomIn(BatchState.Zoom zoom) {
@@ -157,9 +153,15 @@ public class DrawingComponent extends JComponent {
 	}
 
 	public void changeImage() {
+		if (!batchState.hasDownloadedBatch()) {
+			image = new DragableImage(NULL_IMAGE, -300, -300, clientController);
+			this.repaint();
+			return;
+		}
 		Image batchImage = null;
 		BufferedImage bufferedImage = null;
 		try {
+
 			URL imageURL = new URL(clientController.getBatchState().getDownloadBatchResult().getImageURL());
 			bufferedImage = ImageIO.read(imageURL);
 			int width = bufferedImage.getWidth();

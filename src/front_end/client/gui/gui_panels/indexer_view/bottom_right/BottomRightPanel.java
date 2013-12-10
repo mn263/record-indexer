@@ -2,7 +2,6 @@ package front_end.client.gui.gui_panels.indexer_view.bottom_right;
 
 import front_end.client.gui.ClientController;
 import front_end.client.gui.base_classes.BasePanel;
-import front_end.client.gui.gui_panels.indexer_view.bottom_left.FormEntry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,16 +13,29 @@ import java.awt.*;
  */
 public class BottomRightPanel extends BasePanel {
 
+	private FieldHelp fieldHelp;
+	private ImageNavigation imageNavigation;
+
 	public BottomRightPanel(ClientController clientController) {
 		super(clientController);
 
 		setLayout(new BorderLayout());
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		FormEntry tableEntry = new FormEntry(clientController);
-		FormEntry formEntry = new FormEntry(clientController);
-		tabbedPane.addTab("File Help", tableEntry);
-		tabbedPane.addTab("Image Navigation", formEntry);
+		fieldHelp = new FieldHelp(clientController);
+		JScrollPane scrollPane = new JScrollPane(fieldHelp);
+
+		imageNavigation = new ImageNavigation(clientController);
+		tabbedPane.addTab("Field Help", scrollPane);
+		tabbedPane.addTab("Image Navigation", imageNavigation);
 		add(tabbedPane, BorderLayout.CENTER);
+	}
+
+	public void updateTabs() {
+		if (getClientController().getBatchState().hasDownloadedBatch()) {
+			fieldHelp.changeFieldHelpImage();
+		} else {
+			fieldHelp.clear();
+		}
 	}
 }

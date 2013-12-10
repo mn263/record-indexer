@@ -5,9 +5,12 @@ import front_end.client.gui.batch_state.BatchState;
 import front_end.client.gui.batch_state.BatchStateReader;
 import front_end.client.gui.batch_state.BatchStateWriter;
 import shared.communication.params.*;
-import shared.communication.results.*;
+import shared.communication.results.DownloadBatch_Result;
+import shared.communication.results.GetProjects_Result;
+import shared.communication.results.GetSampleImage_Result;
+import shared.communication.results.ValidateUser_Result;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
@@ -54,20 +57,11 @@ public class ClientController {
 		return batchState;
 	}
 
-	public void search(List<String> fieldIDs, List<String> searchValues) {
-		Search_Params search_params = new Search_Params(batchState.getUserName(), batchState.getPassword(),
-				fieldIDs, searchValues);
-		clientCommunicator.search(search_params);
-	}
-
-	public void showImage(String selectedImage) {
-//		String url = selectedImage.substring(0, selectedImage.length() - 1);
-//		try {
-//			getGuiSearchFrame().showImage(new URL(url));
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		}
-	}
+//	public void search(List<String> fieldIDs, List<String> searchValues) {
+//		Search_Params search_params = new Search_Params(batchState.getUserName(), batchState.getPassword(),
+//				fieldIDs, searchValues);
+//		clientCommunicator.search(search_params);
+//	}
 
 	public String getSampleImage(int projectId) {
 		String userName = getBatchState().getUserName();
@@ -89,13 +83,21 @@ public class ClientController {
 		}
 	}
 
-	private boolean submitBatch(String userName, String password, String batchId, String fieldValuesList) {
+	public boolean submitBatch() {
+		String userName = getBatchState().getUserName();
+		String password = getBatchState().getPassword();
+		String batchId = Integer.toString(getBatchState().getDownloadBatchResult().getBatchId());
+		String[][] fieldValuesList = getBatchState().getRecordValues();
+
 		if (batchId.matches(isNumberRegex)) {
 			SubmitBatch_Params submitBatch_params = new SubmitBatch_Params(userName, password, Integer.parseInt(batchId));
-			List<String> fieldValues = Arrays.asList(fieldValuesList.split(";"));
-			for (String recordString : fieldValues) {
-				List<String> recordValues = Arrays.asList(recordString.split(","));
+			List<String> recordValues = new ArrayList<>();
+			for (int i = 0; i < fieldValuesList[0].length; i++) {
+				for (String[] batchRow : fieldValuesList) {
+					recordValues.add(batchRow[i]);
+				}
 				submitBatch_params.addRecordToField(recordValues);
+				recordValues.clear();
 			}
 			String result = clientCommunicator.submitBatch(submitBatch_params);
 			if (result != null && result.equalsIgnoreCase("true")) {
@@ -105,18 +107,18 @@ public class ClientController {
 		return false;
 	}
 
-	private GetFields_Result getFields(String userName, String password, String projectId) {
-		if (projectId.matches(isNumberRegex) || projectId.isEmpty()) {
-			GetFields_Params getFields_params;
-			if (projectId.matches(isNumberRegex)) {
-				getFields_params = new GetFields_Params(userName, password, Integer.parseInt(projectId));
-			} else {
-				getFields_params = new GetFields_Params(userName, password);
-			}
-			return clientCommunicator.getFields(getFields_params);
-		}
-		return null;
-	}
+//	private GetFields_Result getFields(String userName, String password, String projectId) {
+//		if (projectId.matches(isNumberRegex) || projectId.isEmpty()) {
+//			GetFields_Params getFields_params;
+//			if (projectId.matches(isNumberRegex)) {
+//				getFields_params = new GetFields_Params(userName, password, Integer.parseInt(projectId));
+//			} else {
+//				getFields_params = new GetFields_Params(userName, password);
+//			}
+//			return clientCommunicator.getFields(getFields_params);
+//		}
+//		return null;
+//	}
 
 //	private void search(String userName, String password, String fields, String searches) {
 //		_frame.clearImagesPanel();

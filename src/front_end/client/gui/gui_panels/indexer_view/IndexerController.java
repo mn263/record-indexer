@@ -20,7 +20,7 @@ public class IndexerController {
 		BatchStateListener bsListener = new BatchStateListener() {
 			@Override
 			public void BatchDownloaded() {
-				indexerFrame.updateForNewBatch();
+				indexerFrame.updateForNewBatchStatus();
 				indexerFrame.getToolBarPanel().updateToolBar();
 			}
 
@@ -42,6 +42,11 @@ public class IndexerController {
 			@Override
 			public void invertImageToggled() {
 				indexerFrame.invertImageToggled();
+			}
+
+			@Override
+			public void RecordValuesChanged() {
+				indexerFrame.updateRecordValues();
 			}
 		};
 		clientController.getBatchState().addBSListener(bsListener);
