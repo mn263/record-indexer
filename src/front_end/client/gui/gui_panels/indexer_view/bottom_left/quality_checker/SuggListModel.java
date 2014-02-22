@@ -32,14 +32,4 @@ public class SuggListModel extends AbstractListModel<String> {
 		values.add(value);
 		this.fireContentsChanged(this, values.size() - 1, values.size() - 1);
 	}
-
-	public void remove(String value) {
-
-		int index = values.indexOf(value);
-		if (index >= 0) {
-			values.remove(index);
-			this.fireContentsChanged(this, index, index);
-		}
-	}
-
 }

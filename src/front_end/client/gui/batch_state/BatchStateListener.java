@@ -7,11 +7,6 @@ package front_end.client.gui.batch_state;
  */
 public interface BatchStateListener {
 
-//	IMPLEMENTATION EXAMPLE
-// 	ButtonBar(BatchState) {
-//		BS.addListener(this)
-//	}
-
 	void BatchDownloaded();
 
 	void RecordSelectionChanged(int row, int column);

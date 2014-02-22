@@ -4,8 +4,8 @@ import front_end.client.gui.ClientController;
 import front_end.client.gui.base_classes.BasePanel;
 import front_end.client.gui.batch_state.BatchState;
 import front_end.client.gui.gui_panels.indexer_view.bottom_left.SpellCorrector.SpellCorrectorMain;
-import front_end.client.gui.gui_panels.indexer_view.bottom_left.SuggListModel;
-import front_end.client.gui.gui_panels.indexer_view.bottom_left.SuggestionDialog;
+import front_end.client.gui.gui_panels.indexer_view.bottom_left.quality_checker.SuggListModel;
+import front_end.client.gui.gui_panels.indexer_view.bottom_left.quality_checker.SuggestionDialog;
 import shared.communication.results.DownloadBatch_Result;
 
 import javax.swing.*;
@@ -23,11 +23,9 @@ import java.util.Set;
  */
 public class FormEntry extends BasePanel {
 
-	//			Right-clicking on an unrecognized field value (that is highlighted red) should bring up a context menu containing a “See Suggestions”menu item. Selecting the “See Suggestions”menu item should display the Suggestions Dialog. If the user selects a suggested value and clicks the “Use Suggestion”button, the selected value should replace the unrecognized value in the form.
 	private JList<String> rowTable;
 	private ArrayList<JTextField> fieldAreaPanels;
 	private JPopupMenu popupMenu;
-
 
 
 	public FormEntry(ClientController clientController) {
@@ -35,7 +33,6 @@ public class FormEntry extends BasePanel {
 		fieldAreaPanels = new ArrayList<>();
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(500, 10));
-
 
 		if (clientController.getBatchState().hasDownloadedBatch()) {
 			SuggListModel rowListModel = new SuggListModel();
@@ -136,7 +133,6 @@ public class FormEntry extends BasePanel {
 		}
 		JScrollPane rowScrollPane = new JScrollPane(rowPanel);
 		add(rowScrollPane, BorderLayout.EAST);
-//		add(rowPanel);
 	}
 
 	MouseAdapter jTextFieldAdapter = new MouseAdapter() {
@@ -148,11 +144,9 @@ public class FormEntry extends BasePanel {
 					bs.changeSelectedCell(bs.getSelectedRow(), i);
 				}
 			}
-			if (SwingUtilities.isRightMouseButton(e)) {
-				if (e.getComponent().getBackground() != Color.white) {
+			if (SwingUtilities.isRightMouseButton(e) && (e.getComponent().getBackground() != Color.white)) {
 					popupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
-			}
 		}
 	};
 
@@ -175,9 +169,7 @@ public class FormEntry extends BasePanel {
 				if (fieldAreaPanels.get(i) == e.getComponent()) {
 					String value = fieldAreaPanels.get(i).getText();
 					int row = rowTable.getSelectedIndex();
-					if (row < 0) {
-						row = 0;
-					}
+					if (row < 0) row = 0;
 					getClientController().getBatchState().setRecordValue(value, i, row);
 				}
 			}
@@ -191,9 +183,7 @@ public class FormEntry extends BasePanel {
 			for (int i = 0; i < fieldAreaPanels.size(); i++) {
 				if (fieldAreaPanels.get(i) == e.getComponent()) {
 					int row = rowTable.getSelectedIndex();
-					if (row < 0) {
-						row = 0;
-					}
+					if (row < 0) row = 0;
 					getClientController().getBatchState().changeSelectedCell(row, i);
 				}
 			}

@@ -1,7 +1,6 @@
 package front_end.client.gui.gui_panels.indexer_view.bottom_left.quality_checker;
 
 import front_end.client.gui.ClientController;
-import front_end.client.gui.gui_panels.indexer_view.bottom_left.SuggListModel;
 
 import javax.swing.*;
 import java.awt.*;

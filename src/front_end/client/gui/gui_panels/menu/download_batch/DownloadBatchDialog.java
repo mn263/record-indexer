@@ -80,7 +80,7 @@ public class DownloadBatchDialog extends JDialog {
 			for (GetProjects_Result.ProjectInfo project : projects.getProjects()) {
 				if (selectedProject.equalsIgnoreCase(project.getProjectTitle())) {
 					DownloadBatch_Result result = clientController.downloadBatch(Integer.toString(project.getProjectId()));
-					clientController.getBatchState().setDownloadBatchResult(result);
+					clientController.getBatchState().setDownloadBatchResult(result, clientController.getHostAndPort());
 					clientController.saveBatchState();
 				}
 			}

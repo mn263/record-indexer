@@ -5,7 +5,6 @@ import front_end.client.gui.base_classes.BasePanel;
 import front_end.client.gui.batch_state.BatchState;
 import front_end.client.gui.gui_panels.indexer_view.bottom_left.RecordValuesRow;
 import front_end.client.gui.gui_panels.indexer_view.bottom_left.SpellCorrector.SpellCorrectorMain;
-import front_end.client.gui.gui_panels.indexer_view.bottom_left.TableEntryTable;
 import front_end.client.gui.gui_panels.indexer_view.bottom_left.quality_checker.SuggestionDialog;
 import shared.communication.results.DownloadBatch_Result;
 
@@ -73,7 +72,6 @@ public class TableEntry extends BasePanel {
 
 					HashSet<String> suggestedSet = new HashSet<>();
 					for (String word : similarWords) {
-						System.out.println(word);
 						suggestedSet.add(word);
 					}
 					similarWords.clear();

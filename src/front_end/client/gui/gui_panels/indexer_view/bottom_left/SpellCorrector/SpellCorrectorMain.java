@@ -1,35 +1,26 @@
 package front_end.client.gui.gui_panels.indexer_view.bottom_left.SpellCorrector;
 
 import java.io.IOException;
-
-import spell.SpellCorrector.NoSimilarWordFoundException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * A simple main class for running the spelling corrector
  */
 public class SpellCorrectorMain {
-	
+
 	/**
 	 * Give the dictionary file name as the first argument and the word to correct
 	 * as the second argument.
 	 */
 
-	public static void main(String[] args) throws SpellCorrector.NoSimilarWordFoundException, IOException
-	{
-		
-		String dictionaryFileName = args[0];
-		String findWord = args[1];
+	public static ArrayList<String> suggestWord(HashSet<String> dictionaryWords, String findWord) throws SpellCorrector.NoSimilarWordFoundException, IOException {
+
 		findWord.toLowerCase();
-		
-		/**
-		 * Create an instance of your corrector here
-		 */
 		SpellCorrector corrector = new SpellCorrectorWords();
-		
-		corrector.useDictionary(dictionaryFileName);
-		String suggestion = corrector.suggestSimilarWord(findWord);
-		
-		System.out.println("Suggestion is: " + suggestion);
+		corrector.useDictionary(dictionaryWords);
+		String searchWord = findWord.replaceAll("\\s+","");
+		return corrector.suggestSimilarWord(searchWord);
 	}
 
 }

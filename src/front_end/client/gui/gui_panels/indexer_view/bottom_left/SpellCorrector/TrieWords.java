@@ -1,331 +1,225 @@
 package front_end.client.gui.gui_panels.indexer_view.bottom_left.SpellCorrector;
 
-import java.util.Collections;
-import java.util.ArrayList;
 
-public class TrieWords 
-implements Trie
-{
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class TrieWords implements Trie {
 	private TrieNode[] rootNode;
-	private int total_nodes;
-	private int total_words;
-	
-	public TrieWords()
-	{
+	public int totalNodes;
+	public int totalWords;
+
+	public TrieWords() {
 		rootNode = new TrieNode[26];
-		total_nodes = 1;
-		total_words = 0;
+		totalNodes = 1;
+		totalWords = 0;
 	}
 
 	@Override
-	public void add(String word) 
-	{
+	public void add(String word) {
+		word = word.toLowerCase();
 		int placement_value = word.charAt(0) - 97;
 		char letter = word.charAt(0);
-
-		if (rootNode[placement_value] == null)
-		{
-			total_nodes++;
-			rootNode[placement_value] = new TrieNode(0, letter);
+		if (placement_value == 65182) {
+			word = word.substring(1, word.length());
+			String top = "stop";
+			letter = word.charAt(0);
+			placement_value = word.charAt(0) - 97;
 		}
-
-		if (word.length() > 1)
-		{
-			total_nodes = rootNode[placement_value].insert(word.substring(1), total_nodes);
+		if (rootNode[placement_value] == null) {
+			totalNodes++;
+			rootNode[placement_value] = new TrieNode(letter);
 		}
-		if(word.length() == 1)
-		{
-			rootNode[placement_value].count();
+		if (word.length() > 1) {
+			totalNodes = rootNode[placement_value].insert(word.substring(1), totalNodes);
+		} else {
+			rootNode[placement_value].wordCount = rootNode[placement_value].getValue() + 1;
 		}
-		total_words++;
-		return;
+		totalWords++;
 	}
-	
+
 	@Override
-	public Trie.Node find(String word)
-	{
-		String x = word.toLowerCase();
-		if(x.length() < 1)
-		{
+	public Trie.Node find(String word) {
+		word = word.toLowerCase();
+		if (word.isEmpty()) {
 			return null;
 		}
-		int placement_value = x.charAt(0) - 97;
-		if(rootNode[placement_value] != null)
-		{
-			TrieNode node = rootNode[placement_value].find(x.substring(1));
-			return node;
-		}
-		return null;
-	}
-	
-	public int findWordCount(String word)
-	{
-		int wordCount = 0;
 		int placement_value = word.charAt(0) - 97;
-		if(rootNode[placement_value] != null)
-		{
-			wordCount = rootNode[placement_value].findWordCount(word.substring(1));
-			return wordCount;
+		if (rootNode[placement_value] == null) {
+			return null;
+		} else {
+			return rootNode[placement_value].find(word.substring(1));
 		}
-		return 0;
 	}
 
 	@Override
-	public int getWordCount()
-	{
-		
-		return this.total_words;
+	public int getWordCount() {
+		return this.totalWords;
 	}
 
 	@Override
-	public int getNodeCount()
-	{
-
-		return this.total_nodes;
+	public int getNodeCount() {
+		return this.totalNodes;
 	}
 
-	public void deletion(String word, ArrayList<String> D_list, ArrayList<String> similar_words, int distance)
-	{
-		String d_word;
-		String temp;
-		for(int i = 1; i < word.length(); i++)
-		{
-			temp = word.substring(0, i-1);
-			d_word = temp + word.substring(i, word.length());
-			if(distance != 1)
-			{
-				D_list.add(d_word);
-			}
-			if(find(d_word) != null)
-			{
-				similar_words.add(d_word);
-			}
+	public void processWord(ArrayList<String> letterList, ArrayList<String> eventList, ArrayList<String> similarWords, int distance) {
+		String processedWord = "";
+		for (String letter : letterList) {
+			processedWord = processedWord + letter;
 		}
-		if(word.length() > 0)
-		{
-			d_word = word.substring(0, word.length()-1);	
-			if(distance != 1)
-			{
-				D_list.add(d_word);
-			}
-			if(find(d_word) != null)
-			{
-				similar_words.add(d_word);
-			}			
+		if (distance == 0) {
+			eventList.add(processedWord);
 		}
+		if (find(processedWord) != null) {
+			similarWords.add(processedWord);
+		}
+	}
 
-	}
-	public void transportation(String word, ArrayList<String> T_list, ArrayList<String> similar_words, int distance)
-	{
-		String d_word;
-		String front = "";
-		String back = "";
-		char swap1 = 0;
-		char swap2 = 0;
-		for(int i = 1; i < word.length(); i++)
-		{
-			if(i > 1)
-			{
-				front = word.substring(0, i-1);	
-			}
-			swap2 = word.charAt(i-1);
-			swap1 = word.charAt(i);
-			if(i + 1 < word.length())
-			{
-				back = word.substring(i+1, word.length());	
-				d_word = front + swap1 + swap2 +  back;
-			}
-			else
-			{
-				d_word = front + swap1 + swap2;
-			}
-			if(distance != 1)
-			{
-				T_list.add(d_word);
-			}
-			if(find(d_word) != null)
-			{
-				similar_words.add(d_word);
-			}	
+	public void deletion(ArrayList<String> letterList, ArrayList<String> deleteList, ArrayList<String> similarWords, int distance) {
+		ArrayList<String> letterListCopy = new ArrayList<>();
+		for (int index = 0; index < letterList.size(); index++) {
+			letterListCopy.clear();
+			letterListCopy.addAll(letterList);
+			letterListCopy.remove(index);
+			processWord(letterListCopy, deleteList, similarWords, distance);
 		}
 	}
-	public void alteration(String word, ArrayList<String> A_list, ArrayList<String> similar_words, int distance)
-	{
-		String d_word = "";
-		for(int i = 1; i < word.length(); i++)
-		{
-			for(int c = 97; c < 123; c++)
-			{
-				d_word = "";
-				d_word = word.substring(0, i-1);
-				char letter = (char) c;
-				d_word = d_word + letter + word.substring(i);
-				if(distance != 1)
-				{
-					A_list.add(d_word);
-				}
-				if(find(d_word) != null)
-				{
-					similar_words.add(d_word);
-				}
-			}
-		}
-		for(int c = 97; c < 123; c++)
-		{
-			d_word = "";
-			if(word.length() > 0)
-			{
-				d_word = word.substring(0, word.length()-1);
-			}
-			char letter = (char) c;
-			d_word = d_word + letter;
-			if(distance != 1)
-			{
-				A_list.add(d_word);
-			}
-			if(find(d_word) != null)
-			{
-				similar_words.add(d_word);
+
+	public void transportation(ArrayList<String> letterList, ArrayList<String> transformationList, ArrayList<String> similarWords, int distance) {
+		ArrayList<String> letterListCopy = new ArrayList<>();
+		for (int i = 0; i < letterList.size() - 1; i++) {
+			for (int j = 1; j < letterList.size(); j++) {
+				letterListCopy.clear();
+				letterListCopy.addAll(letterList);
+				Collections.swap(letterListCopy, i, j);
+				processWord(letterListCopy, transformationList, similarWords, distance);
 			}
 		}
 	}
-	public void insertion(String word, ArrayList<String> I_list, ArrayList<String> similar_words, int distance)
-	{
-		String d_word = "";
-		String temp1 = "";
-		for(int i = 0; i < word.length(); i++)
-		{
-			for(int c = 97; c < 123; c++)
-			{
-				d_word = "";
-				if(i > 0)
-				{
-					temp1 = word.substring(0, i); 
-				}
-				char letter = (char) c;
-				d_word = temp1 + letter + word.substring(i, word.length());	
-				if(distance != 1)
-				{
-					I_list.add(d_word);
-				}
-				if(find(d_word) != null)
-				{
-					similar_words.add(d_word);
-				}
+
+	public void alteration(ArrayList<String> letterList, ArrayList<String> alterationList, ArrayList<String> similarWords, int distance) {
+		ArrayList<String> letterListCopy = new ArrayList<>();
+		for (int index = 0; index < letterList.size(); index++) {
+			for (int intChar = 97; intChar < 123; intChar++) {
+				letterListCopy.clear();
+				letterListCopy.addAll(letterList);
+				char letter = (char) intChar;
+				letterListCopy.add(index, Character.toString(letter));
+				letterListCopy.remove(index + 1);
+				processWord(letterListCopy, alterationList, similarWords, distance);
 			}
-		}
-		for(int c = 97; c < 123; c++)
-		{
-			char letter = (char) c;
-			d_word = word + letter;	
-			if(distance != 1)
-			{
-				I_list.add(d_word);
-			}
-			if(find(d_word) != null)
-			{
-				similar_words.add(d_word);
-			}	
 		}
 	}
-	public String chooseWord(String word, ArrayList<String> similar_words)
-	{
+
+	public void insertion(ArrayList<String> letterList, ArrayList<String> insertionList, ArrayList<String> similarWords, int distance) {
+		ArrayList<String> letterListCopy = new ArrayList<>();
+		for (int index = 0; index < letterList.size() + 1; index++) {
+			for (int intChar = 97; intChar < 123; intChar++) {
+				letterListCopy.clear();
+				letterListCopy.addAll(letterList);
+				char letter = (char) intChar;
+				letterListCopy.add(index, Character.toString(letter));
+				processWord(letterListCopy, insertionList, similarWords, distance);
+			}
+		}
+	}
+
+	public ArrayList<String> getSimilarWord(String word) {
+		ArrayList<String> similarList = new ArrayList<String>();
+		ArrayList<String> processedList = new ArrayList<String>();
+		ArrayList<String> letterList = new ArrayList<>();
+		for (char letter : word.toCharArray()) {
+			letterList.add(Character.toString(letter));
+		}
+		performEdits(letterList, processedList, similarList, 0);
+
+		for (String currentWord : processedList) {
+			letterList.clear();
+			for (char letter : currentWord.toCharArray()) {
+				letterList.add(Character.toString(letter));
+			}
+			deletion(letterList, processedList, similarList, 1);
+			transportation(letterList, processedList, similarList, 1);
+			alteration(letterList, processedList, similarList, 1);
+			insertion(letterList, processedList, similarList, 1);
+		}
+		if (!similarList.isEmpty()) {
+			return similarList;
+		} else {
+			return null;
+		}
+	}
+
+	private void performEdits(ArrayList<String> letterList, ArrayList<String> processedList,
+							  ArrayList<String> similarList, int distance) {
+		deletion(letterList, processedList, similarList, distance);
+		transportation(letterList, processedList, similarList, distance);
+		alteration(letterList, processedList, similarList, distance);
+		insertion(letterList, processedList, similarList, distance);
+	}
+
+	public String chooseWord(String word, ArrayList<String> similar_words) {
 		Collections.sort(similar_words);
 		String most_similar = similar_words.get(0);
-		int similarWordCount = findWordCount(most_similar);
-		
-		for(int i = 0; i < similar_words.size(); i++)
-		{
-			int wordCount = findWordCount(similar_words.get(i));
-			if(wordCount > similarWordCount)
-			{
+		Trie.Node node = find(most_similar);
+		int similarWordCount = 0;
+		if (node != null) {
+			similarWordCount = node.getValue();
+		}
+		for (String similarWord : similar_words) {
+			Trie.Node nodeSimilar = find(similarWord);
+			int wordCount = 0;
+			if (nodeSimilar != null) {
+				wordCount = nodeSimilar.getValue();
+			}
+			if (wordCount > similarWordCount) {
 				similarWordCount = wordCount;
-				most_similar = similar_words.get(i);
+				most_similar = similarWord;
 			}
 		}
 		return most_similar;
 	}
-	public String similar(String word)
-	{
-		ArrayList<String> similar_list = new ArrayList<String>();
-		ArrayList<String> D_list = new ArrayList<String>();
-		ArrayList<String> T_list = new ArrayList<String>();
-		ArrayList<String> A_list = new ArrayList<String>();
-		ArrayList<String> I_list = new ArrayList<String>();
-		
-		deletion(word, D_list, similar_list, 0);
-		transportation(word, T_list, similar_list, 0);
-		alteration(word, A_list, similar_list, 0);
-		insertion(word, I_list, similar_list, 0);
-		if(similar_list.size() > 0)
-		{
-			String similarWord = chooseWord(word, similar_list);	
-			return similarWord;
-		}
-		else
-		{
-			ArrayList<String> combined_list = new ArrayList<String>();
-			combined_list.addAll(D_list);
-			combined_list.	addAll(T_list);
-			combined_list.addAll(A_list);
-			combined_list.addAll(I_list);
-	
-			for(int i = 0; i < combined_list.size(); i++)
-			{
-				String currentWord = combined_list.get(i);
 
-				deletion(currentWord, combined_list, similar_list, 1);
-				transportation(currentWord, combined_list, similar_list, 1);
-				alteration(currentWord, combined_list, similar_list, 1);
-				insertion(currentWord, combined_list, similar_list, 1);
-			}
-			if(similar_list.size() > 0)
-			{
-				String similarWord = chooseWord(word, similar_list);	
-				return similarWord;
-			}
-		}
-		
-		return null;
-	}
-	
 	@Override
- 	public String toString()
-	{
+	public String toString() {
 		String output = "";
-		for(int i = 0; i < 26; i++)
-		{
-			if(rootNode[i] != null)
-			{
-				output = rootNode[i].toString(output);
+		for (int i = 0; i < 26; i++) {
+			if (rootNode[i] != null) {
+				output = buildOutput(rootNode[i], output);
 			}
 		}
 		return "";
 	}
-	
+
+	public String buildOutput(TrieNode node, String output) {
+		output = output + Character.toString(node.letter);
+		for (int i = 0; i < 26; i++) {
+			if (node.N[i] != null) {
+				output = buildOutput(node.N[i], output);
+			}
+		}
+		if (output.length() > 0) {
+			output = output.substring(0, output.length() - 1);
+		}
+		return output;
+	}
+
 	@Override
-	public int hashCode()
-	{
-		int result = total_nodes*13 + total_words*27;
-		for(int i = 0; i < 26; i++)
-		{
-			result = result + 31 * rootNode[i].getWordCount();
+	public int hashCode() {
+		int result = totalNodes * 13 + totalWords * 27;
+		for (int i = 0; i < 26; i++) {
+			result = result + 31 * rootNode[i].getValue();
 		}
 		return result;
 	}
-	
+
 	@Override
-	public boolean equals(Object o)
-	{
-		if(this == o)
-		{
+	public boolean equals(Object o) {
+		if (this == o) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 }
-
 

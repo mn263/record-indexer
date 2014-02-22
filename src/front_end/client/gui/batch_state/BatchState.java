@@ -1,8 +1,12 @@
 package front_end.client.gui.batch_state;
 
+import org.apache.commons.io.IOUtils;
 import shared.communication.results.DownloadBatch_Result;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * User: matt
@@ -17,6 +21,7 @@ public class BatchState {
 		this.selectedColumn = 0;
 		this.selectedRow = 0;
 		this.recordValues = null;
+		this.knownDataSetsList.clear();
 		batchStateListener.BatchDownloaded();
 
 	}
@@ -30,18 +35,21 @@ public class BatchState {
 	private boolean hasDownloadedBatch = false;
 	private Point windowPosition = new Point(100, 100);
 	private Point windowDimensions = new Point(1000, 650);
+	public Point imageTopLeftCorner = new Point(-300, -300);
 	private int horizDivPosit = 442;
 	private int vertDivPosit = 328;
 	private Zoom zoomLevel = Zoom.ONE;
 	private boolean isHighlighted = true;
 	private boolean isInverted = false;
-	private boolean isTableEntryTab = true;
-	private boolean isFileHelpTab = true;
 	private DownloadBatch_Result result;
 	private int selectedColumn = 0;
 	private int selectedRow = 0;
 	transient private BatchStateListener batchStateListener;
 	private String[][] recordValues;
+	private ArrayList<HashSet<String>> knownDataSetsList = new ArrayList<>();
+
+
+
 
 	public void addBSListener(BatchStateListener bsListener) {
 		this.batchStateListener = bsListener;
@@ -79,11 +87,6 @@ public class BatchState {
 
 	public String getRecordValue(int column, int row) {
 		return recordValues[column][row];
-	}
-
-
-	public void setRecordValues(String[][] recordValues) {
-		this.recordValues = recordValues;
 	}
 
 	public void setRecordValueFromTableEntryTable(String value, int column, int row) {
@@ -158,48 +161,43 @@ public class BatchState {
 		batchStateListener.invertImageToggled();
 	}
 
-	public boolean isTableEntryTab() {
-		return isTableEntryTab;
-	}
-
-	public void setTableEntryTab(boolean tableEntryTab) {
-		isTableEntryTab = tableEntryTab;
-	}
-
-	public boolean isFormEntryTab() {
-		return !isTableEntryTab;
-	}
-
-	public void setFormEntryTab(boolean formEntryTab) {
-		isTableEntryTab = !formEntryTab;
-	}
-
-	public boolean isImageNavigationTab() {
-		return !isFileHelpTab;
-	}
-
-	public void setImageNavigationTab(boolean imageNavigationTab) {
-		isFileHelpTab = !imageNavigationTab;
-	}
-
-	public boolean isFileHelpTab() {
-		return isFileHelpTab;
-	}
-
-	public void setFileHelpTab(boolean fileHelpTab) {
-		isFileHelpTab = fileHelpTab;
-	}
-
 	public DownloadBatch_Result getDownloadBatchResult() {
 		return result;
 	}
 
-	public void setDownloadBatchResult(DownloadBatch_Result result) {
+	public void setDownloadBatchResult(DownloadBatch_Result result, String hostAndPort) {
 		this.result = result;
 		this.recordValues = new String[result.getFieldCount()][result.getRecordCount()];
+		knownDataSetsList.clear();
+
+		for (DownloadBatch_Result.FieldInformation fieldInfo : result.getFieldInformationList()) {
+			String knownDataPath = fieldInfo.getKnownDataPath();
+			try {
+				if (knownDataPath == null) {
+					knownDataSetsList.add(new HashSet<String>());
+				} else {
+					getKnownData(knownDataPath, hostAndPort);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		this.hasDownloadedBatch = true;
 		batchStateListener.BatchDownloaded();
+	}
+
+	private void getKnownData(String knownDataURL, String hostAndPort) throws IOException {
+		knownDataURL = hostAndPort + knownDataURL;
+		URL url = new URL(knownDataURL);
+		String knownData = IOUtils.toString(url);
+		String[] dataArray = knownData.split(",");
+		HashSet<String> knownDataSet = new HashSet<>();
+		for (String value : dataArray) {
+			value = value.toUpperCase();
+			knownDataSet.add(value);
+		}
+		knownDataSetsList.add(knownDataSet);
 	}
 
 	public int getSelectedColumn() {
@@ -208,5 +206,9 @@ public class BatchState {
 
 	public int getSelectedRow() {
 		return selectedRow;
+	}
+
+	public ArrayList<HashSet<String>> getKnownDataSetList() {
+		return knownDataSetsList;
 	}
 }

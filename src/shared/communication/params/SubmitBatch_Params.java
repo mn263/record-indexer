@@ -14,7 +14,7 @@ public class SubmitBatch_Params {
 	private String userName;
 	private String password;
 	private int batchId;
-	private List<RecordValuesSubBatch> fieldValues = new ArrayList<RecordValuesSubBatch>();
+	private List<RecordValuesSubBatch> fieldValues = new ArrayList<>();
 
 	/**
 	 * The required params for

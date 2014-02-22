@@ -5,9 +5,6 @@ import java.awt.*;
 public class RecordIndexerGUI {
 
 	public static void main(String[] args) {
-// 		ant client –Dhost=<HOST NAME> –Dport=<PORT NUMBER>
-//		To make the client target work properly, you will need to modify the client target in your ANT build.xml file
-// 		to specify the full package name of the Java class that implements your Client.
 
 		String host;
 		String port;

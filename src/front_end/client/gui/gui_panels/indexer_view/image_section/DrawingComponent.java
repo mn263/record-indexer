@@ -171,14 +171,11 @@ public class DrawingComponent extends JComponent {
 		}
 		assert batchImage != null;
 		if (batchState.isInverted()) {
-//			changeImage();
-//			BufferedImage img2 = bufferedImage;
-//			if(invert) {
 			batchImage = new RescaleOp(-1.0f, 255.0f, null).filter(bufferedImage, null);
-//			}
 		}
 
-		image = new DragableImage(batchImage, -300, -300, clientController);
+		Point topLeftCorner = clientController.getBatchState().imageTopLeftCorner;
+		image = new DragableImage(batchImage, (int) topLeftCorner.getX(), (int) topLeftCorner.getY(), clientController);
 		this.repaint();
 	}
 
@@ -221,7 +218,7 @@ public class DrawingComponent extends JComponent {
 	private void drawShapes(Graphics2D g2) {
 		image.draw(g2);
 		if (batchState.hasDownloadedBatch() && batchState.isHighlighted()) {
-			createShape(image.topLeftCorner);
+			createShape(clientController.getBatchState().imageTopLeftCorner);
 			shape.draw(g2);
 		}
 	}
@@ -239,10 +236,6 @@ public class DrawingComponent extends JComponent {
 
 interface DragableShape {
 	boolean contains(Graphics2D g2, double x, double y);
-
-	void adjustPosition(double dx, double dy);
-
-	void draw(Graphics2D g2);
 }
 
 
@@ -259,12 +252,6 @@ class DragableRect implements DragableShape {
 		return rect.contains(x, y);
 	}
 
-	@Override
-	public void adjustPosition(double dx, double dy) {
-		rect.setRect(rect.getX() + dx, rect.getY() + dy, rect.getWidth(), rect.getHeight());
-	}
-
-	@Override
 	public void draw(Graphics2D g2) {
 		Color blue = new Color(66, 158, 255, 212);
 		g2.setColor(blue);
@@ -275,13 +262,12 @@ class DragableRect implements DragableShape {
 class DragableImage implements DragableShape {
 
 	private Image image;
-	public Point topLeftCorner;
 	private int imageWidth;
 	private int imageHeight;
 	private ClientController clientController;
 
 	public DragableImage(Image image, int x, int y, ClientController clientController) {
-		this.topLeftCorner = new Point(x, y);
+		clientController.getBatchState().imageTopLeftCorner = new Point(x, y);
 		this.clientController = clientController;
 		this.image = image;
 		this.imageWidth = image.getWidth(null);
@@ -303,7 +289,7 @@ class DragableImage implements DragableShape {
 	private int getSelectedRow(double y) {
 		double convertedY;
 		double zoom = getZoomScale();
-		convertedY = y - topLeftCorner.getY() * zoom - 200;
+		convertedY = y - clientController.getBatchState().imageTopLeftCorner.getY() * zoom - 200;
 		convertedY = convertedY / zoom;
 		BatchState batchState = clientController.getBatchState();
 		DownloadBatch_Result result = batchState.getDownloadBatchResult();
@@ -323,7 +309,7 @@ class DragableImage implements DragableShape {
 	private int getSelectedColumn(double x) {
 		double convertedX;
 		double zoom = getZoomScale();
-		convertedX = x - topLeftCorner.getX() * zoom - 500;
+		convertedX = x - clientController.getBatchState().imageTopLeftCorner.getX() * zoom - 500;
 		convertedX = convertedX / zoom;
 		BatchState batchState = clientController.getBatchState();
 		DownloadBatch_Result result = batchState.getDownloadBatchResult();
@@ -338,18 +324,17 @@ class DragableImage implements DragableShape {
 		return -1;
 	}
 
-	@Override
 	public void adjustPosition(double dx, double dy) {
 		dx = dx / getZoomScale();
 		dy = dy / getZoomScale();
-		topLeftCorner = new Point((int) topLeftCorner.getX() + (int) dx, (int) topLeftCorner.getY() + (int) dy);
+		Point topLeftCorner = clientController.getBatchState().imageTopLeftCorner;
+		clientController.getBatchState().imageTopLeftCorner = new Point((int) topLeftCorner.getX() + (int) dx, (int) topLeftCorner.getY() + (int) dy);
 	}
 
-	@Override
 	public void draw(Graphics2D g2) {
 		g2.translate(1000 / 2, 400 / 2);
 		g2.scale(getZoomScale(), getZoomScale());
-		g2.drawImage(image, (int) topLeftCorner.getX(), (int) topLeftCorner.getY(), imageWidth, imageHeight, null);
+		g2.drawImage(image, (int) clientController.getBatchState().imageTopLeftCorner.getX(), (int) clientController.getBatchState().imageTopLeftCorner.getY(), imageWidth, imageHeight, null);
 	}
 
 	private double getZoomScale() {

@@ -10,20 +10,6 @@ import java.awt.*;
  */
 public class LoginPanel extends JPanel {
 
-//	When no one is logged in, your program should display the Login Dialog. This includes both when the program
-// 	initially starts, and when the user logs out (but doesn’t exit). The Indexing Window should not be visible when no one is logged in.
-//	If the user clicks the “Exit”button in the Login Dialog, the program should terminate.
-//	If the user clicks the “Login”button, the program should pass the specified username and password to the Server
-// 	for validation. If login_view is successful,
-//	Display a Welcome Dialog that welcomes the user by name, and displays the number of records previously indexed
-// 	(i.e., submitted) by the user.
-//	When the user closes the Welcome Dialog, close the Login Dialog, and display the main Indexing Window. The state
-// 	of the Indexing Window should be restored to the same state it was in the last time the user logged out or exited.
-// 	(See the next section for details.)
-//	If login_view fails,
-//	Display an error message dialog indicating the problem.
-//	When the user closes the error message dialog, the Login Dialog should remain visible so the user can try again.
-
 	private JTextField userNameTextField;
 	private JPasswordField passwordTextField;
 	private JButton loginButton;
@@ -34,12 +20,9 @@ public class LoginPanel extends JPanel {
 
 		// create buttons
 		JLabel userNameLabel = new JLabel("Username:");
-//		TODO: take out the 'test2' from being preloaded
-		userNameTextField = new JTextField("test1");
-//		userNameTextField = new JTextField(35);
+		userNameTextField = new JTextField(35);
 		JLabel passwordLabel = new JLabel("Password:");
-		passwordTextField = new JPasswordField("test1");
-//		passwordTextField = new JPasswordField(35);
+		passwordTextField = new JPasswordField(35);
 		loginButton = new JButton("Login");
 		exitButton = new JButton("Exit");
 

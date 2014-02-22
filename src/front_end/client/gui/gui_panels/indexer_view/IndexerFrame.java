@@ -67,7 +67,6 @@ public class IndexerFrame extends BaseFrame {
 		addVerticalDivider(imagePanel);
 
 		pack();
-		setMinimumSize(new Dimension(200, 100));
 		addComponentListener(windowLocationListener);
 	}
 
@@ -82,7 +81,7 @@ public class IndexerFrame extends BaseFrame {
 	private void addVerticalDivider(ImagePanel imagePanel) {
 		splitVerticalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, imagePanel, splitHorizontalPane);
 		splitVerticalPane.setDividerLocation(getClientController().getBatchState().getVertDivPosit());
-		add(splitVerticalPane, BorderLayout.CENTER);
+		add(splitVerticalPane);
 		splitVerticalPane.addPropertyChangeListener(verticalSplitListener);
 	}
 

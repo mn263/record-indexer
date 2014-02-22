@@ -49,10 +49,6 @@ public class DownloadBatchPanel extends JPanel {
 		add(rowTwoPanel);
 	}
 
-	public String getProjectName() {
-		return (String) comboBox.getSelectedItem();
-	}
-
 	public JButton getViewSampleButton() {
 		return viewSampleButton;
 	}

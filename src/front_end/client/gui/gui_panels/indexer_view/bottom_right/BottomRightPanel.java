@@ -14,7 +14,6 @@ import java.awt.*;
 public class BottomRightPanel extends BasePanel {
 
 	private FieldHelp fieldHelp;
-	private ImageNavigation imageNavigation;
 
 	public BottomRightPanel(ClientController clientController) {
 		super(clientController);
@@ -25,7 +24,7 @@ public class BottomRightPanel extends BasePanel {
 		fieldHelp = new FieldHelp(clientController);
 		JScrollPane scrollPane = new JScrollPane(fieldHelp);
 
-		imageNavigation = new ImageNavigation(clientController);
+		ImageNavigation imageNavigation = new ImageNavigation(clientController);
 		tabbedPane.addTab("Field Help", scrollPane);
 		tabbedPane.addTab("Image Navigation", imageNavigation);
 		add(tabbedPane, BorderLayout.CENTER);

@@ -19,7 +19,6 @@ import java.util.List;
 public class FieldHelp extends JEditorPane {
 
 	private ClientController clientController;
-	private JEditorPane jEditorPane;
 
 	public FieldHelp(ClientController clientController) {
 		this.clientController = clientController;
@@ -27,7 +26,7 @@ public class FieldHelp extends JEditorPane {
 		setEditable(false);
 		HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
-		JScrollPane scrollPane = new JScrollPane(jEditorPane);
+		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane);
 		Document doc = htmlEditorKit.createDefaultDocument();
 		setDocument(doc);
